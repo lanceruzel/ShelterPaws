@@ -49,25 +49,36 @@ class AuthController extends Controller
             $fields['cover_dp'] = Storage::disk('public')->put('images/shelterImgs', $request->cover_dp);
         }
 
-        DB::transaction(function () use ($validated){
-            $user = User::create([
-                'email' => $validated['email'],
-                'password' => Hash::make($validated['password']),
-            ]);
+        $user = User::create([
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+        ]);
 
-            UserProfile::create($validated);
+        $validated['user_id'] = $user->id;
 
-            $token = $user->createToken($user->email);
+        $userProfile = UserProfile::create($validated);
 
-            return response()->json([
-                'user' => $user,
-                'token' => $token->plainTextToken,
+        if(!$userProfile){
+            $user->delete();
+
+            return [
                 'message' => [
-                    'status' => 'success',
-                    'detail' => 'Account created. You can now log in.',
+                    'status' => 'error',
+                    'detail' => 'There seems to be a problem creating your account.',
                 ],
-            ]);
-        });
+            ];
+        }
+
+        $token = $user->createToken($user->email);
+
+        return [
+            'user' => $user,
+            'token' => $token->plainTextToken,
+            'message' => [
+                'status' => 'success',
+                'detail' => 'Account created. You can now log in.',
+            ],
+        ];
     }
 
     public function login(Request $request){
@@ -89,20 +100,20 @@ class AuthController extends Controller
 
         $token = $user->createToken($user->email);
 
-        return response()->json([
+        return [
             'user' => $user,
             'token' => $token->plainTextToken
-        ]);
+        ];
     }
 
     public function logout(Request $request){
         $request->user()->tokens()->delete();
         
-        return response()->json([
+        return [
             'message' => [
                 'status' => 'success',
                 'detail' => 'You have been logged out.',
             ]
-        ]);
+        ];
     }
 }

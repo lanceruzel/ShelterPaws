@@ -20,7 +20,15 @@ class UserProfile extends Model
         'description'
     ];
 
-    public function account(){
+    public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    public function adoptionApplications(){
+        return $this->hasMany(AdoptionApplication::class);
+    }
+
+    public function pets(){
+        return $this->hasMany(Pet::class);
     }
 }

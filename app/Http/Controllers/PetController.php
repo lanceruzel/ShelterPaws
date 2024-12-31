@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pet;
-use App\Http\Requests\StorePetRequest;
-use App\Http\Requests\UpdatePetRequest;
-use Illuminate\Http\Client\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class PetController extends Controller
 {
@@ -27,34 +26,38 @@ class PetController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'user_profile_id' => 'required',
             'name' => 'required',
             'type' => 'required|in:' . self::TYPE_DOG . ',' . self::TYPE_CAT,
             'breed' => 'required',
             'age' => 'required|numeric',
-            'health_status' => 'required|numeric',
-            'description' => 'required|numeric',
+            'health_status' => 'required',
+            'description' => 'required',
             'images.*' => 'required|image|max:3072|mimes:png,jpg,jpeg,webp',
         ]);
 
         $imagePaths = [];
 
         if($request->hasFile('images')){
-            foreach ($request->file('images') as $image) {
+            foreach($request->file('images') as $image){
                 $path = Storage::disk('public')->put('images/petProfile', $image);
                 array_push($imagePaths, $path);
             }
         }
 
         $validated['images'] = json_encode($imagePaths);
+        $validated['images'] = stripslashes($validated['images']);
+
+        $validated['user_profile_id'] = $request->user()->userProfile->id;
 
         Pet::create($validated);
 
-        return response()->json([
+        return [
             'message' => [
                     'status' => 'success',
                     'detail' => 'Pet profile created successfully.',
                 ],
-        ]);
+        ];
     }
 
     /**
@@ -62,7 +65,7 @@ class PetController extends Controller
      */
     public function show(Pet $pet)
     {
-        //
+        return $pet;
     }
 
     /**
@@ -75,7 +78,7 @@ class PetController extends Controller
             'type' => 'required|in:' . self::TYPE_DOG . ',' . self::TYPE_CAT,
             'breed' => 'required',
             'age' => 'required|numeric',
-            'health_status' => 'required|numeric',
+            'health_status' => 'required',
             'description' => 'required',
             'images.*' => 'required|image|max:3072|mimes:png,jpg,jpeg,webp',
         ]);
@@ -107,15 +110,16 @@ class PetController extends Controller
         }
     
         $validated['images'] = json_encode($imagePaths);
-    
+        $validated['images'] = stripslashes($validated['images']);
+
         $pet->update($validated);
     
-        return response()->json([
+        return [
             'message' => [
                 'status' => 'success',
                 'detail' => 'Pet profile updated successfully.',
             ],
-        ]);
+        ];
     }
 
     /**
@@ -125,11 +129,11 @@ class PetController extends Controller
     {
         $pet->delete();
 
-        return response()->json([
+        return [
             'message' => [
                     'status' => 'success',
                     'detail' => 'Pet profile deleted successfully.',
                 ],
-        ]);
+        ];
     }
 }

@@ -18,8 +18,8 @@ return new class extends Migration
             $table->foreign('user_profile_id')->references('id')->on('user_profiles')->cascadeOnDelete();
 
             $table->string('name');
-            $table->string('type');
-            $table->enum('breed', ['dog', 'cat'])->default('dog');
+            $table->enum('type', ['dog', 'cat'])->default('dog');
+            $table->string('breed');
             $table->string('age');
             $table->string('health_status');
             $table->string('description');

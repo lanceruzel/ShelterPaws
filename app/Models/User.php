@@ -19,7 +19,6 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
         'role'
@@ -48,15 +47,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function adoptionApplications(){
-        return $this->hasMany(AdoptionApplication::class);
-    }
-
     public function userProfile(){
         return $this->hasOne(UserProfile::class);
-    }
-
-    public function pets(){
-        return $this->hasMany(Pet::class);
     }
 }
