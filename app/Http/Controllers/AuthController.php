@@ -1,0 +1,108 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use App\Models\UserProfile;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+
+class AuthController extends Controller
+{
+    const ROLE_SHELTER = 'shelter';
+    const ROLE_USER = 'user';
+
+    public function register(Request $request){
+        $fields = [
+            'email' => 'required|email|unique:users',
+            'password' => [
+                'required',
+                'confirmed',
+                // Password::min(8)->letters()->mixedCase()->numbers()->symbols(),
+            ],
+            'role' => 'required|in:' . self::ROLE_SHELTER . ',' . self::ROLE_USER,
+            'contact' => 'required',
+            'province' => 'required',
+            'city' => 'required',
+            'barangay' => 'required',
+        ];
+
+        if($request->role === self::ROLE_SHELTER){
+            $fields['name'] = 'required';
+            $fields['profile_dp'] = 'nullable|max:3072|image|mimes:png,jpg,jpeg,webp';
+            $fields['cover_dp'] = 'nullable|max:3072|image|mimes:png,jpg,jpeg,webp';
+        }else{
+            $fields['first_name'] = 'required';
+            $fields['last_name'] = 'required';
+        }
+
+        // Validate the request
+        $validated = $request->validate($fields);
+
+        if($request->hasFile('profile_dp')){
+            $fields['profile_dp'] = Storage::disk('public')->put('images/shelterImgs', $request->profile_dp);
+        }
+
+        if($request->hasFile('cover_dp')){
+            $fields['cover_dp'] = Storage::disk('public')->put('images/shelterImgs', $request->cover_dp);
+        }
+
+        DB::transaction(function () use ($validated){
+            $user = User::create([
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+            ]);
+
+            UserProfile::create($validated);
+
+            $token = $user->createToken($user->email);
+
+            return response()->json([
+                'user' => $user,
+                'token' => $token->plainTextToken,
+                'message' => [
+                    'status' => 'success',
+                    'detail' => 'Account created. You can now log in.',
+                ],
+            ]);
+        });
+    }
+
+    public function login(Request $request){
+        $validated = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        $user = User::where('email', $validated['email'])->first();
+
+        if(!$user || !Hash::check($validated['password'], $user->password)){
+            return [
+                'message' => [
+                    'status' => 'error',
+                    'detail' => 'The provided credentials are incorrect.',
+                ]
+            ];
+        }
+
+        $token = $user->createToken($user->email);
+
+        return response()->json([
+            'user' => $user,
+            'token' => $token->plainTextToken
+        ]);
+    }
+
+    public function logout(Request $request){
+        $request->user()->tokens()->delete();
+        
+        return response()->json([
+            'message' => [
+                'status' => 'success',
+                'detail' => 'You have been logged out.',
+            ]
+        ]);
+    }
+}
