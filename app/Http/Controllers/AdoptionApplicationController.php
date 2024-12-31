@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AdoptionApplication;
 use App\Http\Requests\StoreAdoptionApplicationRequest;
 use App\Http\Requests\UpdateAdoptionApplicationRequest;
+use Illuminate\Http\Client\Request;
 
 class AdoptionApplicationController extends Controller
 {
@@ -19,7 +20,7 @@ class AdoptionApplicationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreAdoptionApplicationRequest $request)
+    public function store(Request $request)
     {
         //
     }
@@ -35,7 +36,7 @@ class AdoptionApplicationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAdoptionApplicationRequest $request, AdoptionApplication $adoptionApplication)
+    public function update(Request $request, AdoptionApplication $adoptionApplication)
     {
         //
     }

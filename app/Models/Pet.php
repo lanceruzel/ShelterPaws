@@ -23,6 +23,10 @@ class Pet extends Model
         'images',
     ];
 
+    protected $casts = [
+        'images' => 'string',
+    ];
+
     public function shelterProfile(){
         return $this->belongsTo(UserProfile::class);
     }
