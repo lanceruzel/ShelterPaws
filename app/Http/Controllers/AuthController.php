@@ -106,6 +106,56 @@ class AuthController extends Controller
         ];
     }
 
+    public function updatePassword(Request $request){
+        $validated = $request->validate([
+            'old_password' => 'required',
+            'password' => [
+                'required',
+                'confirmed',
+                // Password::min(8)->letters()->mixedCase()->numbers()->symbols(),
+            ],
+        ]);
+
+        $user = $request->user();
+
+        if(!Hash::check($validated['old_password'], $user->password)){
+            return [
+                'message' => [
+                    'status' => 'error',
+                    'detail' => 'The provided old password is incorrect.',
+                ]
+            ];
+        }
+
+        $user->password = Hash::make($validated['password']);
+        $user->save();
+
+        return [
+            'message' => [
+                'status' => 'success',
+                'detail' => 'Password has been successfully updated.',
+            ]
+        ];
+    }
+    
+    public function updateEmail(Request $request){
+        $validated = $request->validate([
+            'email' => 'required|email|unique:users',
+        ]);
+
+        $user = $request->user();
+
+        $user->email = $validated['email'];
+        $user->save();
+
+        return [
+            'message' => [
+                'status' => 'success',
+                'detail' => 'Email has been successfully updated.',
+            ]
+        ];
+    }
+
     public function logout(Request $request){
         $request->user()->tokens()->delete();
         
