@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('city');
             $table->string('barangay');
             $table->string('adopter_description');
-            $table->string('status');
+            $table->string('status')->default('available');
 
             $table->timestamps();
         });

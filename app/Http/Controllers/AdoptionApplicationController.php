@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AdoptionApplication;
-use App\Http\Requests\StoreAdoptionApplicationRequest;
-use App\Http\Requests\UpdateAdoptionApplicationRequest;
-use Illuminate\Http\Client\Request;
+use Illuminate\Http\Request;
 
 class AdoptionApplicationController extends Controller
 {
@@ -14,7 +12,7 @@ class AdoptionApplicationController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(AdoptionApplication::all());
     }
 
     /**
@@ -22,7 +20,25 @@ class AdoptionApplicationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'pet_id' => 'required|exists:pets,id',
+            'contact' => 'required',
+            'province' => 'required',
+            'city' => 'required',
+            'barangay' => 'required',
+            'adopter_description' => 'required',
+        ]);
+
+        $validated['user_profile_id'] = $request->user()->userProfile->id;
+
+        AdoptionApplication::create($validated);
+
+        return [
+            'message' => [
+                    'status' => 'success',
+                    'detail' => 'Your request has been submitted.',
+                ],
+        ];
     }
 
     /**
@@ -30,7 +46,7 @@ class AdoptionApplicationController extends Controller
      */
     public function show(AdoptionApplication $adoptionApplication)
     {
-        //
+        return response()->json($adoptionApplication);
     }
 
     /**
@@ -38,7 +54,23 @@ class AdoptionApplicationController extends Controller
      */
     public function update(Request $request, AdoptionApplication $adoptionApplication)
     {
-        //
+        $validated = $request->validate([
+            'contact' => 'required',
+            'province' => 'required',
+            'city' => 'required',
+            'barangay' => 'required',
+            'adopter_description' => 'required',
+            'status' => 'required',
+        ]);
+
+        $adoptionApplication->update($validated);
+
+        return [
+            'message' => [
+                    'status' => 'success',
+                    'detail' => 'Adoption application has been successfully updated.',
+                ],
+        ];
     }
 
     /**
@@ -46,6 +78,12 @@ class AdoptionApplicationController extends Controller
      */
     public function destroy(AdoptionApplication $adoptionApplication)
     {
-        //
+        $adoptionApplication->delete();
+
+        return [
+            'message' => [
+                    'status' => 'Application has been successfully deleted.',
+                ],
+        ];
     }
 }

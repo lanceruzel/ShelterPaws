@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdoptionApplicationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PetController;
 use Illuminate\Http\Request;
@@ -15,3 +16,4 @@ Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::apiResource('pet', PetController::class)->middleware('auth:sanctum');
+Route::apiResource('application', AdoptionApplicationController::class)->middleware('auth:sanctum');
