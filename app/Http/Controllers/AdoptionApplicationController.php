@@ -44,15 +44,15 @@ class AdoptionApplicationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(AdoptionApplication $adoptionApplication)
+    public function show(AdoptionApplication $application)
     {
-        return $adoptionApplication;
+        return $application;
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, AdoptionApplication $adoptionApplication)
+    public function update(Request $request, AdoptionApplication $application)
     {
         $validated = $request->validate([
             'contact' => 'required',
@@ -63,7 +63,7 @@ class AdoptionApplicationController extends Controller
             'status' => 'required',
         ]);
 
-        $adoptionApplication->update($validated);
+        $application->update($validated);
 
         return [
             'message' => [
@@ -76,9 +76,9 @@ class AdoptionApplicationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(AdoptionApplication $adoptionApplication)
+    public function destroy(AdoptionApplication $application)
     {
-        $adoptionApplication->delete();
+        $application->delete();
 
         return [
             'message' => [
