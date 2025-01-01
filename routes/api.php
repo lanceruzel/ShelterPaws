@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdoptionApplicationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PetController;
+use App\Http\Controllers\UserProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,5 @@ Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth
 
 Route::apiResource('pet', PetController::class)->middleware('auth:sanctum');
 Route::apiResource('application', AdoptionApplicationController::class)->middleware('auth:sanctum');
+
+Route::put('/user/profile', [UserProfileController::class, 'update'])->middleware('auth:sanctum');
