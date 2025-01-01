@@ -12,7 +12,7 @@ class AdoptionApplicationController extends Controller
      */
     public function index()
     {
-        return response()->json(AdoptionApplication::all());
+        return AdoptionApplication::all();
     }
 
     /**
@@ -46,7 +46,7 @@ class AdoptionApplicationController extends Controller
      */
     public function show(AdoptionApplication $adoptionApplication)
     {
-        return response()->json($adoptionApplication);
+        return $adoptionApplication;
     }
 
     /**
