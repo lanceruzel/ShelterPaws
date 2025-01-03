@@ -14,6 +14,16 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            container: {
+                padding: '1rem',
+            },
+            screens: {
+                sm: '576px',   // Small screens and up
+                md: '768px',   // Medium screens and up
+                lg: '992px',   // Large screens and up
+                xl: '1200px',  // Extra large screens and up
+                xxl: '1400px', // 2XL screens and up
+            },
         },
     },
     plugins: [],
