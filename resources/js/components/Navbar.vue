@@ -11,9 +11,9 @@ import { Button } from 'primevue';
             </RouterLink>
 
             <nav class="hidden md:flex items-center justify-center h-full">
-                <RouterLink to="/" class="hover:text-amber-500 text-gray-600 h-full px-2 flex items-center text-lg">Adopt</RouterLink>
-                <RouterLink to="/" class="hover:text-amber-500 text-gray-600 h-full px-2 flex items-center text-lg">Shelters</RouterLink>
-                <RouterLink to="/" class="hover:text-amber-500 text-gray-600 h-full px-2 flex items-center text-lg">About</RouterLink>
+                <RouterLink to="/" class="hover:text-teal-500 hover:font-semibold text-gray-600 h-full px-2 flex items-center text-lg">Adopt</RouterLink>
+                <RouterLink to="/" class="hover:text-teal-500 hover:font-semibold text-gray-600 h-full px-2 flex items-center text-lg">Shelters</RouterLink>
+                <RouterLink to="/" class="hover:text-teal-500 hover:font-semibold text-gray-600 h-full px-2 flex items-center text-lg">About</RouterLink>
             </nav>
 
             <nav class="hidden md:flex items-center justify-center h-full space-x-3">
