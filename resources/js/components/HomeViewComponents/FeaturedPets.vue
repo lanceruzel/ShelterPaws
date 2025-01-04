@@ -31,7 +31,7 @@ const featuredPets = [
 <template>
     <section class="py-20 bg-gray-50">
         <div class="container mx-auto">
-            <h2 class="text-3xl font-bold text-center mb-12 text-gray-900">Featured Pets</h2>
+            <h2 class="text-3xl font-bold text-center mb-12">Featured Pets</h2>
 
             <div class="grid md:grid-cols-3 gap-8">
                 <Card v-for="pet in featuredPets" :key="pet.id" class="overflow-hidden hover:scale-105 transition-all duration-300">
@@ -40,7 +40,7 @@ const featuredPets = [
                     </template>
 
                     <template #content>
-                        <h2 class="text-xl font-semibold mb-2 text-gray-900">{{ pet.name }}</h2>
+                        <h2 class="text-xl font-semibold mb-2">{{ pet.name }}</h2>
                         <p class="text-sm text-gray-600 mb-2">{{ pet.type }} - {{ pet.breed }}</p>
                         <p class="text-sm text-gray-600 mb-4">{{ pet.age }}</p>
                     </template>

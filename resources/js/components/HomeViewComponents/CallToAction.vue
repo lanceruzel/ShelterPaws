@@ -21,7 +21,7 @@ const features = [
 </script>
 
 <template>
-    <section class="bg-yellow-50 py-20">
+    <section class="bg-gray-50 py-20">
         <div class="container mx-auto px-4 text-center">
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <div>
@@ -30,14 +30,14 @@ const features = [
                     
                     <div class="space-x-4">
                         <Button as="router-link" label="Find a Pet" to="/" />
-                        <Button as="router-link" label="Register Your Shelter" to="/" variant="outlined" severity="contrast" />
+                        <Button as="router-link" label="Register Your Shelter" to="/" variant="outlined" />
                     </div>
                 </div>
 
                 <div class="grid lg:grid-cols-2 gap-6">
                     <Card>
                         <template #title>
-                            <i class="pi pi-search text-amber-500" style="font-size: 2rem"></i>
+                            <i class="pi pi-search text-teal-500" style="font-size: 2rem"></i>
                             <h3 class="text-xl font-semibold mb-2 mt-2">Find Your Perfect Match</h3>
                         </template>
 
@@ -48,7 +48,7 @@ const features = [
 
                     <Card>
                         <template #title>
-                            <i class="pi pi-heart text-amber-500" style="font-size: 2rem"></i>
+                            <i class="pi pi-heart text-teal-500" style="font-size: 2rem"></i>
                             <h3 class="text-xl font-semibold mb-2 mt-2">Save a Life</h3>
                         </template>
 
@@ -59,7 +59,7 @@ const features = [
 
                     <Card class="col-span-2">
                         <template #title>
-                            <i class="pi pi-home text-amber-500" style="font-size: 2rem"></i>
+                            <i class="pi pi-home text-teal-500" style="font-size: 2rem"></i>
                             <h3 class="text-xl font-semibold mb-2 mt-2">Support Local Shelters</h3>
                         </template>
 

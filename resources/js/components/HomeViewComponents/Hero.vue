@@ -7,7 +7,7 @@ import { Button } from 'primevue';
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row items-center">
                 <div class="md:w-1/2 md:pr-8 mb-8 md:mb-0">
-                    <h1 class="text-4xl md:text-5xl font-bold mb-6 text-gray-900">Find Your Perfect Furry Companion</h1>
+                    <h1 class="text-4xl md:text-5xl font-bold mb-6">Find Your Perfect Furry Companion</h1>
 
                     <p class="text-xl mb-8 text-gray-600">Connect with local shelters and give a loving home to pets in need.</p>
 
