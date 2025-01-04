@@ -6,7 +6,7 @@ import { Button } from 'primevue';
 <template>
     <nav class="bg-white border-b border-gray-200 fixed top-0 z-50 w-full">
         <div class="container mx-auto flex justify-between items-center h-16">
-            <RouterLink to="/" class="font-bold text-2xl text-gray-900">
+            <RouterLink to="/" class="font-bold text-2xl">
                 ShelterPaws
             </RouterLink>
 

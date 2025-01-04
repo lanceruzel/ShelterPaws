@@ -26,7 +26,7 @@ const testimonials = [
 <template>
     <section class="py-20 bg-white">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12 text-gray-900">What People Are Saying</h2>
+            <h2 class="text-3xl font-bold text-center mb-12">What People Are Saying</h2>
 
             <div class="grid md:grid-cols-3 gap-8">
                 <Card v-for="testimonial in testimonials" :key="testimonial.name" class="bg-gray-50">
@@ -35,7 +35,7 @@ const testimonials = [
                             <img :src="testimonial.image" class="w-12 h-12 rounded-full mr-4 object-cover" :alt="testimonial.name" />
 
                             <div>
-                                <h3 v-text="testimonial.name" class="font-semibold text-gray-900"></h3>
+                                <h3 v-text="testimonial.name" class="font-semibold"></h3>
                                 <p v-text="testimonial.role" class="text-sm text-gray-6000"></p>
                             </div>
                         </div>
