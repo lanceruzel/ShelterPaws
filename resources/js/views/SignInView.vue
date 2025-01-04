@@ -36,7 +36,7 @@ import Message from 'primevue/message';
                     <Button type="submit" label="Signin" class="mt-5" fluid />
                 </form>
 
-                <Button label="Create new account" link fluid as="router-link" :to="{ name: 'signup' }" />
+                <Button label="Don't have an account? Sign Up" link fluid as="router-link" :to="{ name: 'signup' }" />
             </template>
         </Card>
     </div>

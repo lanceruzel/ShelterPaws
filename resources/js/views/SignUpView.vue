@@ -50,7 +50,7 @@ import Message from 'primevue/message';
                     <Button type="submit" label="Register" class="mt-5" fluid />
                 </form>
 
-                <Button label="Sign in instead?" link fluid as="router-link" :to="{ name: 'signin' }" />
+                <Button label="Already have an account? Sign in" link fluid as="router-link" :to="{ name: 'signin' }" />
             </template>
         </Card>
     </div>
