@@ -14,6 +14,6 @@ import Footer from '../components/HomeViewComponents/Footer.vue';
         <FeaturedPets />
         <Testimonials />
         <CallToAction />
-        <Footer />
+        <!-- <Footer /> -->
     </div>
 </template>
