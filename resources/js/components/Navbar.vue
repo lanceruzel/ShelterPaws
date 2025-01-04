@@ -17,8 +17,8 @@ import { Button } from 'primevue';
             </nav>
 
             <nav class="hidden md:flex items-center justify-center h-full space-x-3">
-                <Button label="Login" variant="text" />
-                <Button label="Sign Up" />
+                <Button label="Login" as="router-link" :to="{ name: 'signin' }" variant="outlined" />
+                <Button label="Sign Up" as="router-link" :to="{ name: 'signup' }"/>
             </nav>
 
             <Button unstyled pt:root="md:hidden" icon="pi pi-bars" severity="secondary" variant="text" />

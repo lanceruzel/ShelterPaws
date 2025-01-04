@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import NotFoundView from '../views/NotFoundView.vue';
 import DefaultLayout from '../layouts/DefaultLayout.vue';
+import authRoutes from './auth';
 import homeRoutes from './home';
 
 const router = createRouter({
@@ -8,6 +9,7 @@ const router = createRouter({
     linkExactActiveClass: 'active',
     routes: [
         ...homeRoutes,
+        ...authRoutes,
         {
             path: '/:catchAll(.*)',
             name: 'not-found',

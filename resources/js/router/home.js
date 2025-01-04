@@ -1,4 +1,4 @@
-import DefaultLAyout from '../layouts/DefaultLayout.vue';
+import DefaultLayout from '../layouts/DefaultLayout.vue';
 import HomeView from '../views/HomeView.vue';
 
 export default [
@@ -7,7 +7,7 @@ export default [
         name: 'home',
         component: HomeView,
         meta: { 
-            layout: DefaultLAyout,
+            layout: DefaultLayout,
             auth: true
         },
     },
