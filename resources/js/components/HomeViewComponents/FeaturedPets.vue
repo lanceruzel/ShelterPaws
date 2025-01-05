@@ -39,7 +39,7 @@ const featuredPets = [
             </div>
 
             <div class="text-center mt-12">
-                <Button as="router-link" label="View All Available Pets" :to="{ name: 'pets' }" variant="outlined" />
+                <Button as="router-link" label="View All Available Pets" :to="{ name: 'pets' }" severity="secondary" />
             </div>
         </div>
     </section>
