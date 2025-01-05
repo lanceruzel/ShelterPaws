@@ -19,7 +19,7 @@ import { RouterLink } from 'vue-router';
 
                     <ul class="space-y-2 text-sm flex flex-col items-center md:items-start justify-start">
                         <li>
-                            <RouterLink :to="{ name: 'home' }" class="hover:text-teal-500 transition-colors">Adopt a Pet</RouterLink>
+                            <RouterLink :to="{ name: 'pets' }" class="hover:text-teal-500 transition-colors">Adopt a Pet</RouterLink>
                         </li>
 
                         <li>

@@ -5,6 +5,7 @@ import PrivacyPolicyView from '../views/PrivacyPolicyView.vue';
 import TermsOfServiceView from '../views/TermsOfServiceView.vue';
 import FAQView from '../views/FAQView.vue';
 import PetView from '../views/PetView.vue';
+import PetsView from '../views/PetsView.vue';
 
 export default [
     {
@@ -47,6 +48,15 @@ export default [
         path: '/faq',
         name: 'faq',
         component: FAQView,
+        meta: { 
+            layout: DefaultLayout,
+            auth: true
+        },
+    },
+    {
+        path: '/pets',
+        name: 'pets',
+        component: PetsView,
         meta: { 
             layout: DefaultLayout,
             auth: true
