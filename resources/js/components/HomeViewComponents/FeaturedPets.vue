@@ -1,6 +1,6 @@
 <script setup>
 import { Button, Card } from 'primevue';
-import Image from 'primevue/image';
+import PetCard from '../PetCard.vue';
 
 const featuredPets = [
     { 
@@ -35,25 +35,7 @@ const featuredPets = [
             <h2 class="text-3xl font-bold text-center mb-12">Featured Pets</h2>
 
             <div class="grid md:grid-cols-3 gap-8">
-                <Card class="overflow-hidden" v-for="pet in featuredPets" :key="pet.id">
-                    <template #header>
-                        <div class="overflow-hidden relative h-72 md:h-80 flex items-center justify-center border-b">
-                            <Image class="object-cover w-full" preview :src="pet.image" :alt="pet.name" />
-                        </div>
-                    </template>
-
-                    <template #title>
-                        <span class="font-bold" v-text="pet.name"></span>
-                    </template>
-
-                    <template #subtitle>
-                        <span v-text="pet.breed"></span>
-                    </template>
-
-                    <template #footer>
-                        <Button as="router-link" icon="pi pi-heart" label="Adopt Me" :to="{ name: 'pet-view', params: { id: pet.id } }" fluid />
-                    </template>
-                </Card>
+                <PetCard :pets="featuredPets" />
             </div>
 
             <div class="text-center mt-12">
