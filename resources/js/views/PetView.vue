@@ -10,7 +10,7 @@ const pet = {
     gender: "Male",
     size: "Large",
     color: "Golden",
-    description: "Max is a friendly and energetic Golden Retriever who loves to play fetch and go for long walks. He's great with children and other dogs, making him a perfect family pet. Max is house-trained and knows basic commands like sit, stay, and come.",
+    description: "Max is a friendly and energetic Golden Retriever who loves to play fetch and go for long walks. He's great with children and other dogs, making him a perfect family pet. Max is house-trained and knows basic commands like sit, stay, and come. He's great with children and other dogs, making him a perfect family pet. Max is house-trained and knows basic commands like sit, stay, and come.",
     image: "https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
     shelter: "Happy Tails Rescue",
     shelterLocation: "New York, NY"
@@ -53,7 +53,7 @@ const pet = {
                             </div>
                         </div>
 
-                        <p class="mb-6">{{ pet.description }}</p>
+                        <p class="mb-6 line-clamp-3">{{ pet.description }}</p>
 
                         <div class="mb-6">
                             <p class="font-semibold">Shelter</p>
