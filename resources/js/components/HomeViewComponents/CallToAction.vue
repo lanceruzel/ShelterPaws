@@ -30,7 +30,7 @@ const features = [
                     
                     <div class="space-x-4">
                         <Button as="router-link" label="Find a Pet" to="/" />
-                        <Button as="router-link" label="Register Your Shelter" to="/" variant="outlined" />
+                        <Button as="router-link" label="Register Your Shelter" to="/" severity="secondary" />
                     </div>
                 </div>
 

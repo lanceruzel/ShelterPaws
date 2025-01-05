@@ -13,7 +13,7 @@ import { Button } from 'primevue';
 
                     <div class="space-x-4">
                         <Button as="router-link" label="Start Adopting" to="/" />
-                        <Button as="router-link" label="Register Your Shelter" to="/" variant="outlined" />
+                        <Button as="router-link" label="Register Your Shelter" to="/" severity="secondary" />
                     </div>
                 </div>
 

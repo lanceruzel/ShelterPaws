@@ -11,13 +11,13 @@ import { Button } from 'primevue';
             </RouterLink>
 
             <nav class="hidden md:flex items-center justify-center h-full">
-                <RouterLink :to="{ name: 'pets' }" class="hover:text-teal-500 hover:font-semibold text-gray-600 h-full px-2 flex items-center text-lg">Adopt</RouterLink>
-                <RouterLink :to="{ name: 'shelters' }" class="hover:text-teal-500 hover:font-semibold text-gray-600 h-full px-2 flex items-center text-lg">Shelters</RouterLink>
-                <RouterLink :to="{ name: 'about' }" class="hover:text-teal-500 hover:font-semibold text-gray-600 h-full px-2 flex items-center text-lg">About</RouterLink>
+                <RouterLink :to="{ name: 'pets' }" class="hover:text-teal-500 hover:font-semibold text-gray-600 h-full px-2 flex items-center">Adopt</RouterLink>
+                <RouterLink :to="{ name: 'shelters' }" class="hover:text-teal-500 hover:font-semibold text-gray-600 h-full px-2 flex items-center">Shelters</RouterLink>
+                <RouterLink :to="{ name: 'about' }" class="hover:text-teal-500 hover:font-semibold text-gray-600 h-full px-2 flex items-center">About</RouterLink>
             </nav>
 
             <nav class="hidden md:flex items-center justify-center h-full space-x-3">
-                <Button label="Login" as="router-link" :to="{ name: 'signin' }" variant="outlined" />
+                <Button label="Login" as="router-link" :to="{ name: 'signin' }" severity="secondary" />
                 <Button label="Sign Up" as="router-link" :to="{ name: 'signup' }"/>
             </nav>
 
