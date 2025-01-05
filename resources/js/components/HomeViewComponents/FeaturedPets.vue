@@ -1,5 +1,6 @@
 <script setup>
 import { Button, Card } from 'primevue';
+import Image from 'primevue/image';
 
 const featuredPets = [
     { 
@@ -34,25 +35,29 @@ const featuredPets = [
             <h2 class="text-3xl font-bold text-center mb-12">Featured Pets</h2>
 
             <div class="grid md:grid-cols-3 gap-8">
-                <Card v-for="pet in featuredPets" :key="pet.id" class="overflow-hidden hover:scale-105 transition-all duration-300">
+                <Card class="overflow-hidden" v-for="pet in featuredPets" :key="pet.id">
                     <template #header>
-                        <img :src="pet.image" alt="pet.name" class="w-full h-64 object-cover">
+                        <div class="overflow-hidden relative h-72 md:h-80 flex items-center justify-center border-b">
+                            <Image class="object-cover w-full" preview :src="pet.image" :alt="pet.name" />
+                        </div>
                     </template>
 
-                    <template #content>
-                        <h2 class="text-xl font-semibold mb-2">{{ pet.name }}</h2>
-                        <p class="text-sm text-gray-600 mb-2">{{ pet.type }} - {{ pet.breed }}</p>
-                        <p class="text-sm text-gray-600 mb-4">{{ pet.age }}</p>
+                    <template #title>
+                        <span class="font-bold" v-text="pet.name"></span>
+                    </template>
+
+                    <template #subtitle>
+                        <span v-text="pet.breed"></span>
                     </template>
 
                     <template #footer>
-                        <Button as="router-link" label="Adopt Me" to="/" fluid />
+                        <Button as="router-link" icon="pi pi-heart" label="Adopt Me" :to="{ name: 'pet-view', params: { id: pet.id } }" fluid />
                     </template>
                 </Card>
             </div>
 
             <div class="text-center mt-12">
-                <Button as="router-link" label="View All Available Pets" to="/" variant="outlined" />
+                <Button as="router-link" label="View All Available Pets" :to="{ name: 'pets' }" variant="outlined" />
             </div>
         </div>
     </section>

@@ -97,8 +97,8 @@ const filteredBreeds = computed(() => {
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
                 <Card class="overflow-hidden" v-for="pet in pets" :key="pet.id">
                     <template #header>
-                        <div class="overflow-hidden relative h-72 md:h-80 flex items-center justify-center">
-                            <Image class="object-cover" preview :src="pet.image" :alt="pet.name" />
+                        <div class="overflow-hidden relative h-72 md:h-80 flex items-center justify-center border-b">
+                            <Image class="object-cover w-full" preview :src="pet.image" :alt="pet.name" />
                         </div>
                     </template>
 
@@ -111,7 +111,7 @@ const filteredBreeds = computed(() => {
                     </template>
 
                     <template #footer>
-                        <Button label="View Details" fluid />
+                        <Button as="router-link" icon="pi pi-heart" label="Know Me" :to="{ name: 'pet-view', params: { id: pet.id } }" fluid />
                     </template>
                 </Card>
             </div>
