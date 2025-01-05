@@ -45,15 +45,15 @@ import { RouterLink } from 'vue-router';
                         </li>
 
                         <li>
-                            <RouterLink :to="{ name: 'home' }" class="hover:text-teal-500 transition-colors">FAQ</RouterLink>
+                            <RouterLink :to="{ name: 'faq' }" class="hover:text-teal-500 transition-colors">FAQ</RouterLink>
                         </li>
 
                         <li>
-                            <RouterLink :to="{ name: 'home' }" class="hover:text-teal-500 transition-colors">Privacy Policy</RouterLink>
+                            <RouterLink :to="{ name: 'privacy' }" class="hover:text-teal-500 transition-colors">Privacy Policy</RouterLink>
                         </li>
 
                         <li>
-                            <RouterLink :to="{ name: 'home' }" class="hover:text-teal-500 transition-colors">Terms of Service</RouterLink>
+                            <RouterLink :to="{ name: 'terms' }" class="hover:text-teal-500 transition-colors">Terms of Service</RouterLink>
                         </li>
                     </ul>
                 </div>
