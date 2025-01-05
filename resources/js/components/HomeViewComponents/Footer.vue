@@ -23,11 +23,11 @@ import { RouterLink } from 'vue-router';
                         </li>
 
                         <li>
-                            <RouterLink :to="{ name: 'home' }" class="hover:text-teal-500 transition-colors">Find Shelters</RouterLink>
+                            <RouterLink :to="{ name: 'shelters' }" class="hover:text-teal-500 transition-colors">Find Shelters</RouterLink>
                         </li>
 
                         <li>
-                            <RouterLink :to="{ name: 'home' }" class="hover:text-teal-500 transition-colors">About</RouterLink>
+                            <RouterLink :to="{ name: 'about' }" class="hover:text-teal-500 transition-colors">About</RouterLink>
                         </li>
 
                         <li>

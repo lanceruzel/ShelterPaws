@@ -6,6 +6,8 @@ import TermsOfServiceView from '../views/TermsOfServiceView.vue';
 import FAQView from '../views/FAQView.vue';
 import PetView from '../views/PetView.vue';
 import PetsView from '../views/PetsView.vue';
+import ShelterView from '../views/ShelterView.vue';
+import SheltersView from '../views/SheltersView.vue';
 
 export default [
     {
@@ -66,6 +68,24 @@ export default [
         path: '/pet/:id',
         name: 'pet-view',
         component: PetView,
+        meta: { 
+            layout: DefaultLayout,
+            auth: true
+        },
+    },
+    {
+        path: '/shelters',
+        name: 'shelters',
+        component: SheltersView,
+        meta: { 
+            layout: DefaultLayout,
+            auth: true
+        },
+    },
+    {
+        path: '/shelter/:id',
+        name: 'shelter-view',
+        component: ShelterView,
         meta: { 
             layout: DefaultLayout,
             auth: true

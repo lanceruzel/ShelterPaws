@@ -61,6 +61,8 @@ const pet = {
                             <p>{{ pet.shelterLocation }}</p>
                         </div>
                         
+                        <Button class="mb-4" fluid severity="secondary" label="View Shelter"></Button>
+
                         <Button fluid>
                             <i class="pi pi-heart"></i>
                             <span>Adopt {{ pet.name }}</span>
