@@ -2,9 +2,11 @@
 import { Card, Button, IconField, InputIcon, InputText, Select, Tag } from 'primevue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import { ref } from 'vue';
+import { defineAsyncComponent, ref } from 'vue';
 import { FilterMatchMode } from '@primevue/core/api';
-import { useToast } from 'primevue/usetoast';
+import { useDialog } from 'primevue';
+
+const dialog = useDialog();
 
 const pets = [
   { id: 1, name: "Max", species: "Dog", breed: "Golden Retriever", status: "under-review", image: "https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80", },
@@ -49,6 +51,25 @@ const getSeverity = (status) => {
 const selectRow = (data) => {
    console.log(data)
 };
+
+const petFormDialog = defineAsyncComponent(() => import('../components/Dialogs/PetFormDialog.vue'));
+
+const showPetFormDialog = () => {
+    dialog.open(petFormDialog, {
+        props: {
+            header: 'Update Task',
+            style: {
+
+                class: 'max-w-46'
+            },
+            modal: true
+        },
+        data: {
+            // id: 2,
+            // test: 'test'
+        }
+    });
+}
 </script>
 
 <template>
@@ -61,7 +82,7 @@ const selectRow = (data) => {
                     <div class="flex items-center justify-between">
                         <h3 class="font-semibold">Your Pet Listings</h3>
 
-                        <Button label="Add new pet" />
+                        <Button label="Add new pet" @click="showPetFormDialog" />
                     </div>
 
                     <DataTable :value="pets" v-model:filters="filters" dataKey="id" filterDisplay="row" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]">
