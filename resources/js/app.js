@@ -48,6 +48,18 @@ app.use(PrimeVue, {
     theme: {
         preset: MyPreset
     },
+    pt: {
+        Column: {
+            columnTitle: 'text-gray-800 font-medium text-[1rem]',
+            bodyCell: 'text-gray-700 font-normal text-[1rem]'
+        },
+        Select: {
+            label: 'text-[1rem]'
+        },
+        Paginator: {
+            content: 'text-[1rem]'
+        }
+    }
 });
 
 app.mount('#app');

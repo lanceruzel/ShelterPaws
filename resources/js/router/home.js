@@ -9,6 +9,7 @@ import PetsView from '../views/PetsView.vue';
 import ShelterView from '../views/ShelterView.vue';
 import SheltersView from '../views/SheltersView.vue';
 import AdoptionStatusView from '../views/AdoptionStatusView.vue';
+import PetManagementView from '../views/PetManagementView.vue';
 
 export default [
     {
@@ -96,6 +97,15 @@ export default [
         path: '/adopt/status',
         name: 'adoption-status',
         component: AdoptionStatusView,
+        meta: { 
+            layout: DefaultLayout,
+            auth: true
+        },
+    },
+    {
+        path: '/shelters/pet/manage',
+        name: 'pet-management',
+        component: PetManagementView,
         meta: { 
             layout: DefaultLayout,
             auth: true
