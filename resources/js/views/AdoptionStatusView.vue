@@ -63,7 +63,7 @@ watch(value, (newValue) => {
                 <TabPanels
                 :pt="{
                     root: {
-                        class: '!bg-transparent'
+                        class: '!bg-transparent !px-0'
                     }
                 }">
                     <TabPanel value="0" as="p" class="m-0 space-y-8" >
