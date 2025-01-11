@@ -3,32 +3,103 @@ import Card from 'primevue/card';
 import InputText from 'primevue/inputtext';
 import Password from 'primevue/password';
 import Button from 'primevue/button';
-import Message from 'primevue/message';
 import { Select } from 'primevue';
-import { ref } from 'vue';
+import { onMounted, reactive, ref, watch } from 'vue';
 import FileUpload from 'primevue/fileupload';
 import Divider from 'primevue/divider';
+import { useAuthStore } from '../stores/auth';
+import { storeToRefs } from 'pinia';
 
-const cities = ref([
-    { name: 'New York', code: 'NY' },
-    { name: 'Rome', code: 'RM' },
-    { name: 'London', code: 'LDN' },
-    { name: 'Istanbul', code: 'IST' },
-    { name: 'Paris', code: 'PRS' }
-]);
+const authStore = useAuthStore();
+const { authenticate } = authStore;
+const { errors } = storeToRefs(authStore);
 
 const src = ref(null);
 
+let geoData = ref();
+let provinces = ref([]);
+let cities = ref([]);
+let barangay = ref([]);
+
+const formData = reactive({
+    name: '',
+    contact: '',
+    province: '',
+    city: '',
+    barangay: '',
+    email: '',
+    password: '',
+    password_confirmation: '',
+    role: 'shelter',
+    cover_photo: null
+});
+
 function onFileSelect(event) {
     const file = event.files[0];
+    formData.cover_photo = file;
     const reader = new FileReader();
+
+    reader.readAsDataURL(file);
 
     reader.onload = async (e) => {
         src.value = e.target.result;
     };
-
-    reader.readAsDataURL(file);
 }
+
+async function loadData() {
+    try{
+        const response = await axios.get('/data/philippines.json');
+
+        if(response.status === 200){
+            geoData.value = response.data;
+        }
+    }catch(error){
+        console.error('Error fetching data:', error);
+    }
+}
+
+// Provinces
+watch(geoData, (updatedData) => {
+    if(updatedData){
+        provinces.value = Object.keys(updatedData).map((provinceName) => {
+            return provinceName;
+        });
+
+        provinces.value.sort()
+    }
+});
+
+//Cities
+watch(() => formData.province, (selectedProvince) => {
+    if(selectedProvince && geoData.value){
+        const citiesInProvince = geoData.value[selectedProvince];
+
+        if(citiesInProvince){
+            cities.value = Object.keys(citiesInProvince).map(cityName => cityName);
+            provinces.value.sort()
+        }else{
+            cities.value = [];
+        }
+    }
+});
+
+//Barangays
+watch(() => formData.city, (selectedCity) => {
+    if(selectedCity && geoData.value){
+        const barangaysInCity = geoData.value[formData.province][selectedCity];
+
+        if(barangaysInCity){
+            barangay.value = barangaysInCity.map(barangayName => barangayName);
+            barangay.value.sort()
+        }else{
+            barangay.value = [];
+        }
+    }
+});
+
+onMounted(() => {
+    loadData();
+});
 </script>
 
 <template>
@@ -54,73 +125,70 @@ function onFileSelect(event) {
                 </template>
 
                 <template #content>
-                    <Message class="mt-2" severity="success">fdsf</Message>
-                    
-                    <form>
+                    <form @submit.prevent="authenticate('register', formData)">
                         <div class="flex flex-col gap-1 mt-3">
                             <label>Shelter Name</label>
-                            <InputText type="text"/>
-                            <small class="form-error-message"></small>
+                            <InputText v-model="formData.name" :invalid="errors.name" type="text"/>
+                            <small class="form-error-message" v-if="errors.name">{{ errors.name[0] }}</small>
                         </div>
                         
                         <div class="grid md:grid-cols-2 gap-3">
                             <div class="flex flex-col gap-1 mt-3">
                                 <label>Province</label>
-                                <Select :options="cities" optionLabel="name" placeholder="Select a province" fluid />
-                                <small class="form-error-message"></small>
+                                <Select v-model="formData.province" :invalid="errors.province" filter :options="provinces" placeholder="Select a province" fluid  />
+                                <small class="form-error-message" v-if="errors.province">{{ errors.province[0] }}</small>
                             </div>
 
                             <div class="flex flex-col gap-1 mt-3">
                                 <label>City</label>
-                                <Select :options="cities" optionLabel="name" placeholder="Select a city" fluid />
-                                <small class="form-error-message"></small>
+                                <Select v-model="formData.city" :invalid="errors.city" filter :options="cities" placeholder="Select a city" fluid />
+                                <small class="form-error-message" v-if="errors.city">{{ errors.city[0] }}</small>
                             </div>
                         </div>
 
                         <div class="flex flex-col gap-1 mt-3">
                             <label>Barangay</label>
-                            <Select :options="cities" optionLabel="name" placeholder="Select a barangay" fluid />
-                            <small class="form-error-message"></small>
+                            <Select v-model="formData.barangay" :invalid="errors.barangay" filter :options="barangay" placeholder="Select a barangay" fluid />
+                            <small class="form-error-message" v-if="errors.barangay">{{ errors.barangay[0] }}</small>
                         </div>
 
                         <div class="flex flex-col gap-1 mt-3">
                             <label>Contact</label>
-                            <InputText/>
-                            <small class="form-error-message"></small>
+                            <InputText v-model="formData.contact" :invalid="errors.contact" />
+                            <small class="form-error-message" v-if="errors.contact">{{ errors.contact[0] }}</small>
                         </div>
 
                         <div class="flex flex-col gap-1 mt-3">
                             <label>Email</label>
-                            <InputText type="email"/>
-                            <small class="form-error-message"></small>
+                            <InputText v-model="formData.email" :invalid="errors.email" type="email"/>
+                            <small class="form-error-message" v-if="errors.email">{{ errors.email[0] }}</small>
                         </div>
 
                         <div class="grid md:grid-cols-2 gap-3">
                             <div class="flex flex-col gap-1 mt-3">
                                 <label>Password</label>
-                                <Password toggleMask fluid />
-                                <small class="form-error-message"></small>
+                                <Password v-model="formData.password" :invalid="errors.password" toggleMask fluid />
+                                <small class="form-error-message" v-if="errors.password">{{ errors.password[0] }}</small>
                             </div>
 
                             <div class="flex flex-col gap-1 mt-3">
                                 <label>Password Confirmation</label>
-                                <Password toggleMask fluid />
-                                <small class="form-error-message"></small>
+                                <Password v-model="formData.password_confirmation" :invalid="errors.password_confirmation" toggleMask fluid />
+                                <small class="form-error-message" v-if="errors.password_confirmation">{{ errors.password_confirmation[0] }}</small>
                             </div>
                         </div>
 
-                        <div class="flex flex-col gap-1 mt-3">
+                        <div class="flex flex-col items-center gap-1 mt-3 ">
                             <label>Cover Photo</label>
 
                             <div class="flex flex-col items-center gap-6">
-                                <FileUpload mode="basic" @select="onFileSelect" customUpload auto severity="secondary" class="p-button-outlined" />
-                                <img v-if="src" :src="src" alt="Image" class="shadow-md rounded-xl w-full sm:w-64" style="filter: grayscale(100%)" />
+                                <FileUpload mode="basic" @select="onFileSelect" accept="image/*" customUpload auto severity="secondary" class="p-button-outlined" />
+                                <img v-if="src" :src="src" alt="Image" class="shadow-md rounded-xl w-full sm:w-64" />
+                                <small class="form-error-message" v-if="errors.cover_photo">{{ errors.cover_photo[0] }}</small>
                             </div>
-                            
-                            <small class="form-error-message"></small>
                         </div>
 
-                        <Button type="submit" label="Register" class="mt-5" fluid />
+                        <Button type="submit" label="Register" class="mt-5" fluid :loading="authStore.isLoading" />
                     </form>
 
                     <Button class="mt-3" label="Already have an account? Sign in" link fluid as="router-link" :to="{ name: 'signin' }" />

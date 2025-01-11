@@ -40,7 +40,11 @@ export const useAuthStore = defineStore('authStore', {
             this.isLoading = true;
 
             try{
-                const response = await axios.post(`/api/auth/${route}`, formData);
+                const response = await axios.post(`/api/auth/${route}`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
 
                 if(response.status === 200){
                     const data = response.data;

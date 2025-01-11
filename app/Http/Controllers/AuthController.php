@@ -31,7 +31,7 @@ class AuthController extends Controller
 
         if($request->role === self::ROLE_SHELTER){
             $fields['name'] = 'required';
-            $fields['cover_photo'] = 'nullable|max:3072|image|mimes:png,jpg,jpeg,webp';
+            $fields['cover_photo'] = 'required|image|mimes:png,jpg,jpeg,webp';
         }else{
             $fields['first_name'] = 'required';
             $fields['last_name'] = 'required';
@@ -41,7 +41,7 @@ class AuthController extends Controller
         $validated = $request->validate($fields);
 
         if($request->hasFile('cover_photo')){
-            $fields['cover_photo'] = Storage::disk('public')->put('images/shelterImgs', $request->cover_photo);
+            $validated['cover_photo'] = $request->file('cover_photo')->store('images/shelterImgs', 'public');
         }
 
         $user = User::create([
