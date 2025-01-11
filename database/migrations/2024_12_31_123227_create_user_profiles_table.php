@@ -30,8 +30,7 @@ return new class extends Migration
             // Columns specific to shelter role
             $table->string('name')->nullable();
             $table->string('description')->nullable();
-            $table->string('profile_dp')->nullable();
-            $table->string('cover_dp')->nullable();
+            $table->string('cover_photo')->nullable();
 
             $table->timestamps();
         });

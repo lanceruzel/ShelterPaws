@@ -15,8 +15,7 @@ class UserProfile extends Model
         'province',
         'city',
         'barangay',
-        'profile_dp',
-        'cover_dp',
+        'cover_photo',
         'description'
     ];
 
