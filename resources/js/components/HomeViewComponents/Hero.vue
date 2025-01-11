@@ -12,8 +12,8 @@ import { Button } from 'primevue';
                     <p class="text-xl mb-8 text-gray-600">Connect with local shelters and give a loving home to pets in need.</p>
 
                     <div class="space-x-4">
-                        <Button as="router-link" label="Start Adopting" to="/" />
-                        <Button as="router-link" label="Register Your Shelter" to="/" severity="secondary" />
+                        <Button as="router-link" label="Start Adopting" :to="{ name: 'signin' }" />
+                        <Button as="router-link" label="Register Your Shelter" :to="{ name: 'shelter-register' }" severity="secondary" />
                     </div>
                 </div>
 
