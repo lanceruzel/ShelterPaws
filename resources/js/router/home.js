@@ -18,7 +18,6 @@ export default [
         component: HomeView,
         meta: { 
             layout: DefaultLayout,
-            auth: true
         },
     },
     {
@@ -27,7 +26,6 @@ export default [
         component: AboutView,
         meta: { 
             layout: DefaultLayout,
-            auth: true
         },
     },
     {
@@ -36,7 +34,6 @@ export default [
         component: PrivacyPolicyView,
         meta: { 
             layout: DefaultLayout,
-            auth: true
         },
     },
     {
@@ -45,7 +42,6 @@ export default [
         component: TermsOfServiceView,
         meta: { 
             layout: DefaultLayout,
-            auth: true
         },
     },
     {
@@ -54,7 +50,6 @@ export default [
         component: FAQView,
         meta: { 
             layout: DefaultLayout,
-            auth: true
         },
     },
     {
@@ -63,7 +58,6 @@ export default [
         component: PetsView,
         meta: { 
             layout: DefaultLayout,
-            auth: true
         },
     },
     {
@@ -72,7 +66,6 @@ export default [
         component: PetView,
         meta: { 
             layout: DefaultLayout,
-            auth: true
         },
     },
     {
@@ -81,7 +74,6 @@ export default [
         component: SheltersView,
         meta: { 
             layout: DefaultLayout,
-            auth: true
         },
     },
     {

@@ -11,7 +11,7 @@ export default [
         component: SignInView,
         meta: { 
             layout: DefaultLayout,
-            auth: false
+            guest: true
         },
     },
     {
@@ -20,7 +20,7 @@ export default [
         component: ShelterRegisterView,
         meta: { 
             layout: DefaultLayout,
-            auth: false
+            guest: true
         },
     },
     {
@@ -29,7 +29,7 @@ export default [
         component: SignUpView,
         meta: { 
             layout: DefaultLayout,
-            auth: false
+            guest: true
         },
     },
 ]

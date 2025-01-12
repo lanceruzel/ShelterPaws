@@ -111,6 +111,6 @@ export const useAuthStore = defineStore('authStore', {
                     console.error(error); 
                 }
             }
-        }
+        },
     },
 });
