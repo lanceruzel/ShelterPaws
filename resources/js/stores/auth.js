@@ -7,7 +7,7 @@ export const useAuthStore = defineStore('authStore', {
             user: null,
             errors: {},
             message: '',
-            isLoading: false
+            isFormLoading: false
         };
     },
     getters: {
@@ -37,7 +37,7 @@ export const useAuthStore = defineStore('authStore', {
             }
         },
         async authenticate(route, formData){
-            this.isLoading = true;
+            this.isFormLoading = true;
 
             try{
                 const response = await axios.post(`/api/auth/${route}`, formData, {
@@ -82,7 +82,7 @@ export const useAuthStore = defineStore('authStore', {
                 console.log('Inside Axios authenticate:');
                 console.error(error);
             }finally{
-                this.isLoading = false;
+                this.isFormLoading = false;
             }
         },
         async logout(){

@@ -188,7 +188,7 @@ onMounted(() => {
                             </div>
                         </div>
 
-                        <Button type="submit" label="Register" class="mt-5" fluid :loading="authStore.isLoading" />
+                        <Button type="submit" label="Register" class="mt-5" fluid :loading="authStore.isFormLoading" />
                     </form>
 
                     <Button class="mt-3" label="Already have an account? Sign in" link fluid as="router-link" :to="{ name: 'signin' }" />

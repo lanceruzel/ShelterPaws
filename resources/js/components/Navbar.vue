@@ -35,7 +35,7 @@ const { logout } = authStore;
             </nav>
 
             <form v-if="authStore.user" @submit.prevent="logout">
-                <Button type="submit" icon="pi pi-sign-out" label="Logout" variant="text" :loading="authStore.isLoading" />
+                <Button type="submit" icon="pi pi-sign-out" label="Logout" variant="text" :loading="authStore.isFormLoading" />
             </form>
 
             <Button unstyled pt:root="md:hidden" icon="pi pi-bars" severity="secondary" variant="text" />

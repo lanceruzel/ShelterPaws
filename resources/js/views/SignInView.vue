@@ -50,7 +50,7 @@ onMounted(() => {
                             <Button label="Forgot Password?" link />
                         </div> -->
 
-                        <Button type="submit" label="Signin" class="mt-5" fluid :loading="authStore.isLoading" />
+                        <Button type="submit" label="Signin" class="mt-5" fluid :loading="authStore.isFormLoading" />
                     </form>
 
                     <Button label="Don't have an account? Sign Up" link fluid as="router-link" :to="{ name: 'signup' }" />

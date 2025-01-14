@@ -9,8 +9,8 @@ use Illuminate\Validation\ValidationException;
 
 class PetController extends Controller
 {
-    const TYPE_DOG = 'dog';
-    const TYPE_CAT = 'cat';
+    const TYPE_DOG = 'Dog';
+    const TYPE_CAT = 'Cat';
 
     /**
      * Display a listing of the resource.
@@ -26,13 +26,13 @@ class PetController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'user_profile_id' => 'required',
             'name' => 'required',
             'type' => 'required|in:' . self::TYPE_DOG . ',' . self::TYPE_CAT,
             'breed' => 'required',
             'age' => 'required|numeric',
             'health_status' => 'required',
             'description' => 'required',
+            'images' => 'required|array', // Ensure images is an array
             'images.*' => 'required|image|max:3072|mimes:png,jpg,jpeg,webp',
         ]);
 
