@@ -17,21 +17,26 @@ const petStore = usePetStore();
 const { savePet } = petStore;
 const { errors } = storeToRefs(petStore);
 const visible = ref(false);
+const reloadData = ref(false);
 
 const formData = reactive({
-    user_profile_id: null,
+    id: null,
     name: '',
     type: 'Dog',
     breed: null,
     age: 1,
     health_status: 'Good',
     description: '',
-    images: []
+    images: [],
+    newImages: []
 });
 
 const closeDialog = () => {
     resetForm();
-    dialogRef.value.close();
+
+    dialogRef.value.close({
+        reloadData: reloadData.value
+    });
 }
 
 const dogBreeds = reactive([
@@ -66,8 +71,12 @@ const onSelectedFiles = (event) => {
     files.value = event.files;
 };
 
-const removeImage = (index) => {
-    files.value.splice(index, 1);
+const removeImage = (index, mode) => {
+    if(mode === 'files'){
+        files.value.splice(index, 1);
+    }else{
+        formData.images.splice(index, 1);
+    }
 };
 
 const onClearTemplatingUpload = (clear) => {
@@ -82,17 +91,27 @@ function resetForm(){
     formData.health_status = 'Good';
     formData.description = '';
     formData.images = [];
+    formData.newImages = [];
 }
 
 async function submit(){
-    formData.images = files.value;
+    if(mode.value === 'update'){
+        //Push new images on form data
+        files.value.forEach((val) => {
+            formData.newImages.push(val);
+        });
+    }else{
+        formData.images = files.value;
+    }
 
     const pet = await savePet(
         (formData.id) ? 'update' : 'store', 
-        (formData.id) ? formData.id : null,
-        formData);
+        formData.id, formData);
 
     if(pet){
+        //Reload data
+        reloadData.value = true;
+        
         closeDialog();
         
         //Clear form
@@ -100,19 +119,17 @@ async function submit(){
     }
 }
 
-watch(files, (newVal) => {
-    if(newVal){
-        formData.images = newVal;
-    }
-}, { deep: true });
-
 onMounted(() => {
     errors.value = {};
 
-    Object.assign(formData, dialogRef.value.data);
+    //Retrieved passed data and store it on formData
+    Object.assign(formData, dialogRef.value.data.petData);
 
+    //Identify form mode
     if(formData.id){
         mode.value = 'update';
+    }else{
+        mode.value = 'store';
     }
 });
 </script>
@@ -210,21 +227,34 @@ onMounted(() => {
 
                 <template #content="{ files }">
                     <div class="flex flex-col gap-8 pt-4">
-                        <div v-if="files.length > 0">
-                            <div class="grid md:grid-cols-2 gap-5 w-full">
-                                <div v-for="(file, index) in files" :key="file.name + file.type + file.size" class="flex flex-col items-center w-full">
-                                    <img :src="file.objectURL" :alt="file.name" class="shadow-md rounded-xl w-full sm:w-64 h-64 object-cover mb-1" />
+                        <div class="grid md:grid-cols-2 gap-5 w-full">
+                            <!-- Existing images -->
+                            <div v-if="mode === 'update' && formData.images && formData.images.length > 0" v-for="(image, index) in formData.images" :key="index" class="flex flex-col items-center w-full">
+                                <img :src="'/storage/' + image" :alt="image" class="shadow-md rounded-xl w-full sm:w-64 h-64 object-cover mb-1" />
 
-                                    <p class="mb-3 text-ellipsis sm:max-w-64 line-clamp-1 text-center" v-text="file.name"></p>
-                                
-                                    <Button 
-                                        icon="pi pi-times" 
-                                        @click="removeImage(index)"
-                                        outlined 
-                                        rounded 
-                                        severity="danger" 
-                                    />
-                                </div>
+                                <p class="mb-3 text-ellipsis sm:max-w-64 line-clamp-1 text-center" v-text="image"></p>
+                            
+                                <Button 
+                                    icon="pi pi-times" 
+                                    @click="removeImage(index, 'formData')"
+                                    outlined 
+                                    rounded 
+                                    severity="danger" 
+                                />
+                            </div>
+
+                            <div v-if="files.length > 0" v-for="(file, index) in files" :key="file.name + file.type + file.size" class="flex flex-col items-center w-full">
+                                <img :src="file.objectURL" :alt="file.name" class="shadow-md rounded-xl w-full sm:w-64 h-64 object-cover mb-1" />
+
+                                <p class="mb-3 text-ellipsis sm:max-w-64 line-clamp-1 text-center" v-text="file.name"></p>
+                            
+                                <Button 
+                                    icon="pi pi-times" 
+                                    @click="removeImage(index, 'files')"
+                                    outlined 
+                                    rounded 
+                                    severity="danger" 
+                                />
                             </div>
                         </div>
                     </div>
@@ -239,6 +269,7 @@ onMounted(() => {
             </FileUpload>
 
             <small class="form-error-message block" v-if="errors.images" v-for="(err, index) in errors.images" :key="index">{{ err }}</small>
+            <small class="form-error-message block" v-if="errors.newImages" v-for="(err, index) in errors.newImages" :key="index">{{ err }}</small>
         </div>
 
         <div class="flex items-center justify-end gap-2">

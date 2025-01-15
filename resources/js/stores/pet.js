@@ -8,12 +8,44 @@ export const usePetStore = defineStore('petStore', {
             errors: {},
             isFormLoading: false,
             isDeleteLoading: false,
+
         }
     },
     getters: {
 
     },
     actions: {
+        async getUserListing(){
+            try{
+                if(localStorage.getItem('token')){
+                    const response = await axios.get('/api/pet', {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem('token')}`
+                        }
+                    });
+
+                    if(response.status === 200){
+                        //Get pets
+                        this.pets = Object.values(response.data);
+                        
+                        if(this.pets){
+                            //Check images format and convert if it is in string format
+                            this.pets.forEach((item) => {
+                                //Check if images is in string format
+                                if(typeof item.images === 'string'){
+
+                                    //Convert string array into array
+                                    item.images = JSON.parse(item.images);
+                                }
+                            });
+                        }
+                    }
+                }
+            }catch (error){
+                console.log('Inside Axios get pets:');
+                console.error(error);
+            }
+        },
         async getPet(id){
             if(localStorage.getItem('token')){
                 try{
@@ -33,15 +65,11 @@ export const usePetStore = defineStore('petStore', {
         },
         async savePet(action, id = null, formData){
             this.isFormLoading = true;
-        
+
             try{
-                const url = (action === 'update') ? `/api/pet/${id}` : '/api/pet';
-                const method = (action === 'update') ? 'put' : 'post';
+                const url = (action === 'update' && id) ? `/api/pet/${id}?_method=PUT` : '/api/pet';
         
-                const response = await axios({
-                    method,
-                    url,
-                    data: formData,
+                const response = await axios.post(url, formData, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                         'Content-Type': 'multipart/form-data',

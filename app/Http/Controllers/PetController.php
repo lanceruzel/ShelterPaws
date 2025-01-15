@@ -15,9 +15,9 @@ class PetController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Pet::all();
+        return $request->user()->userProfile->pets;
     }
 
     /**
@@ -73,52 +73,65 @@ class PetController extends Controller
      */
     public function update(Request $request, Pet $pet)
     {
-        $validated = $request->validate([
+        $rules = [
             'name' => 'required',
             'type' => 'required|in:' . self::TYPE_DOG . ',' . self::TYPE_CAT,
             'breed' => 'required',
             'age' => 'required|numeric',
             'health_status' => 'required',
             'description' => 'required',
-            'images.*' => 'required|image|max:3072|mimes:png,jpg,jpeg,webp',
-        ]);
-    
-        $existingImages = json_decode($pet->images, true);
-        $newImages = $request->file('images');
-        $imagePaths = [];
-    
-        // Check for new images and save them
-        if($newImages){
-            foreach($newImages as $image){
+            'newImages' => 'nullable|array',
+            'newImages.*' => 'nullable|image|max:3072|mimes:png,jpg,jpeg,webp'
+        ];
+
+        //Required images when 'images' and 'newImages' are both empty
+        if(!$request->images && !$request->newImages){
+            $rules['images'] = 'required|array';
+        }else{
+            $rules['images'] = 'nullable|array';
+        }
+
+        $validated = $request->validate($rules);
+
+        $imagePaths = $validated['images'] ?? [];
+
+        //Save new images
+        if($request->hasFile('newImages')){
+            foreach($request->file('newImages') as $image){
                 $path = Storage::disk('public')->put('images/petProfile', $image);
+
+                //Push new images paths 
                 array_push($imagePaths, $path);
             }
         }
-    
-        // Merge existing images that are still in the request
-        foreach($existingImages as $existingImage){
-            if(!in_array($existingImage, $imagePaths)){
-                array_push($imagePaths, $existingImage);
-            }
-        }
-    
-        // Delete images that are no longer in the request
+
+        //Get saved images
+        $existingImages = json_decode($pet->images, true);
+
+        //Delete images that are no longer in the new images
         foreach($existingImages as $existingImage){
             if(!in_array($existingImage, $imagePaths)){
                 Storage::disk('public')->delete($existingImage);
             }
         }
-    
+
         $validated['images'] = json_encode($imagePaths);
         $validated['images'] = stripslashes($validated['images']);
 
-        $pet->update($validated);
-    
+        $pet->name = $validated['name'];
+        $pet->type = $validated['type'];
+        $pet->breed = $validated['breed'];
+        $pet->age = $validated['age'];
+        $pet->health_status = $validated['health_status'];
+        $pet->description = $validated['description'];
+        $pet->images = $validated['images'];
+        $pet->save();
+
         return [
             'message' => [
-                'status' => 'success',
-                'detail' => 'Pet profile updated successfully.',
-            ],
+                    'status' => 'success',
+                    'detail' => 'Pet profile update successfully.',
+                ],
         ];
     }
 
