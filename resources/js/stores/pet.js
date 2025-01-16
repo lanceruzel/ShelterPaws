@@ -79,8 +79,14 @@ export const usePetStore = defineStore('petStore', {
                     if(response.status === 200){
                         this.errors = {};
 
+                        const pet = response.data;
+
+                        if(pet){
+                            pet.images = JSON.parse(pet.images);
+                        }
+
                         //Pass data
-                        return response.data;
+                        return pet;
                     }
                 }catch(error){
                     console.log('Inside Axios getPet:');

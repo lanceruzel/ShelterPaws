@@ -28,7 +28,7 @@ class Pet extends Model
     ];
 
     public function shelterProfile(){
-        return $this->belongsTo(UserProfile::class);
+        return $this->belongsTo(UserProfile::class, 'user_profile_id');
     }
 
     public function adoptionApplications(){
