@@ -16,6 +16,8 @@ Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
+Route::get('/pet/all', [PetController::class, 'all']);
+
 Route::apiResource('pet', PetController::class)->middleware('auth:sanctum');
 Route::apiResource('application', AdoptionApplicationController::class)->middleware('auth:sanctum');
 

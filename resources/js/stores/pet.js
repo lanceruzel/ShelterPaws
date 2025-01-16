@@ -15,6 +15,31 @@ export const usePetStore = defineStore('petStore', {
 
     },
     actions: {
+        async getAllPetListing(){
+            try{
+                const response = await axios.get('/api/pet/all');
+
+                if(response.status === 200){
+                    //Get pets
+                    this.pets = Object.values(response.data);
+                    
+                    if(this.pets){
+                        //Check images format and convert if it is in string format
+                        this.pets.forEach((item) => {
+                            //Check if images is in string format
+                            if(typeof item.images === 'string'){
+
+                                //Convert string array into array
+                                item.images = JSON.parse(item.images);
+                            }
+                        });
+                    }
+                }
+            }catch (error){
+                console.log('Inside Axios get all pet listing:');
+                console.error(error);
+            }
+        },
         async getUserListing(){
             try{
                 if(localStorage.getItem('token')){

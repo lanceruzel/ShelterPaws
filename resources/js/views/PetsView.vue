@@ -1,7 +1,12 @@
 <script setup>
 import { Card, InputText, Select, FloatLabel, Button } from 'primevue';
 import PetCard from '../components/PetCard.vue';
-import { reactive, computed } from 'vue';
+import { reactive, computed, onMounted, ref } from 'vue';
+import { usePetStore } from '../stores/pet';
+import Skeleton from 'primevue/skeleton';
+
+const petStore = usePetStore();
+const { getAllPetListing } = petStore;
 
 const formData = reactive({
     search: '',
@@ -28,14 +33,8 @@ const catBreeds = reactive([
     { breed: 'Other', value: 'other' },
 ]);
 
-const pets = [
-  { id: 1, name: 'Max', species: 'Dog', breed: 'Golden Retriever', age: 2, image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' },
-  { id: 2, name: 'Luna', species: 'Cat', breed: 'Siamese', age: 1, image: 'https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' },
-  { id: 3, name: 'Buddy', species: 'Dog', breed: 'Labrador', age: 3, image: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' },
-  { id: 4, name: 'Bella', species: 'Cat', breed: 'Persian', age: 4, image: 'https://images.unsplash.com/photo-1513245543132-31f507417b26?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' },
-  { id: 5, name: 'Charlie', species: 'Dog', breed: 'Beagle', age: 2, image: 'https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' },
-  { id: 6, name: 'Lucy', species: 'Cat', breed: 'Maine Coon', age: 3, image: 'https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' },
-];
+let pets = reactive([]);
+const isLoading = ref(false);
 
 const filteredBreeds = computed(() => {
   if (formData.type === 'dog') {
@@ -47,6 +46,27 @@ const filteredBreeds = computed(() => {
   }
 
   formData.breed = null;
+});
+
+const loadPets = async () =>{
+    isLoading.value = true;
+
+    try{
+        await getAllPetListing();
+
+        //Assign pets
+        pets = petStore.pets;
+
+        console.log(pets)
+    }catch(error){
+        console.error('Error in load pets:', error);
+    }finally{
+        isLoading.value = false;
+    }
+}
+
+onMounted(async () => {
+    loadPets(); 
 });
 </script>
 
@@ -72,6 +92,7 @@ const filteredBreeds = computed(() => {
                                 optionLabel="type" 
                                 optionValue="value"
                                 checkmark :highlightOnSelect="false"
+                                :showClear="true"
                             />
 
                             <label>Type</label>
@@ -84,6 +105,7 @@ const filteredBreeds = computed(() => {
                                 optionLabel="breed" 
                                 optionValue="value"
                                 checkmark :highlightOnSelect="false"
+                                :showClear="true"
                             />
 
                             <label>Breed</label>
@@ -94,8 +116,30 @@ const filteredBreeds = computed(() => {
                 </template>
             </Card>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
+            <div v-if="!isLoading" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
                 <PetCard :pets="pets" />
+            </div>
+            
+            <div v-else class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
+                <Card v-for="i in 3" :key="i">
+                    <template #header>
+                        <div class="overflow-hidden relative h-72 md:h-80 flex items-center justify-center border-b">
+                            <Skeleton class="w-full !h-full"></Skeleton>
+                        </div>
+                    </template>
+
+                    <template #title>
+                        <Skeleton class="!h-5" width="15rem"></Skeleton>
+                    </template>
+
+                    <template #subtitle>
+                        <Skeleton class="mt-3" width="6rem"></Skeleton>
+                    </template>
+
+                    <template #footer>
+                        <Skeleton class="!h-10 w-full"></Skeleton>
+                    </template>
+                </Card>
             </div>
         </div>
     </div>

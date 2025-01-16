@@ -13,6 +13,14 @@ class PetController extends Controller
     const TYPE_CAT = 'Cat';
 
     /**
+     * Display a all pet.
+     */
+    public function all()
+    {
+        return Pet::all();
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)

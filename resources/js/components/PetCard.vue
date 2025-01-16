@@ -5,14 +5,13 @@ import Image from 'primevue/image';
 defineProps({
     pets: Object
 });
-
 </script>
 
 <template>
 <Card class="overflow-hidden" v-for="pet in pets" :key="pet.id">
     <template #header>
         <div class="overflow-hidden relative h-72 md:h-80 flex items-center justify-center border-b">
-            <Image class="object-cover w-full" preview :src="pet.image" :alt="pet.name" />
+            <Image class="object-cover w-full" preview :src="'/storage/' + pet.images[0]"  :alt="pet.name" />
         </div>
     </template>
 
