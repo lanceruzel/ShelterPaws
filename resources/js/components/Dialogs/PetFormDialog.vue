@@ -28,7 +28,8 @@ const formData = reactive({
     health_status: 'Good',
     description: '',
     images: [],
-    newImages: []
+    newImages: [],
+    status: null
 });
 
 const closeDialog = () => {
@@ -137,6 +138,17 @@ onMounted(() => {
 <template>
     <form @submit.prevent="submit">
         <span class="text-surface-500 dark:text-surface-400 block mb-4">Input pet details.</span>
+
+        <div v-if="mode === 'update'" class="flex flex-col gap-1 mb-3">
+            <label class="font-semibold">Status</label>
+            <Select  
+                v-model="formData.status" 
+                :invalid="errors.status"
+                :options="['Available', 'Unavailable', 'Adopted']" 
+                checkmark :highlightOnSelect="false" 
+            />
+            <small class="form-error-message" v-if="errors.status">{{ errors.status[0] }}</small>
+        </div>
 
         <div class="flex flex-col gap-1 mb-3">
             <label class="font-semibold">Pet Name</label>

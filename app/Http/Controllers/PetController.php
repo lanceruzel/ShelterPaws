@@ -79,6 +79,7 @@ class PetController extends Controller
             'breed' => 'required',
             'age' => 'required|numeric',
             'health_status' => 'required',
+            'status' => 'required',
             'description' => 'required',
             'newImages' => 'nullable|array',
             'newImages.*' => 'nullable|image|max:3072|mimes:png,jpg,jpeg,webp'
@@ -124,6 +125,7 @@ class PetController extends Controller
         $pet->age = $validated['age'];
         $pet->health_status = $validated['health_status'];
         $pet->description = $validated['description'];
+        $pet->status = $validated['status'];
         $pet->images = $validated['images'];
         $pet->save();
 
