@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('age');
             $table->string('health_status');
             $table->string('description');
-            $table->string('status')->default('available');
+            $table->enum('status', ['Available', 'Unavailable', 'Adopted'])->default('Available');
             $table->json('images');
 
             $table->timestamps();

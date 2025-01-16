@@ -14,30 +14,62 @@ const dialog = useDialog();
 
 let pets = reactive([]);
 const isLoading = ref(false);
+const filters = ref();
 
-const statuses = ref(['under-review', 'available', 'adopted', 'pending-visit']);
+const dogBreeds = reactive([
+    { breed: 'Golden Retriever', value: 'Golden Retriever' },
+    { breed: 'Labrador', value: 'Labrador' },
+    { breed: 'Beagle', value: 'Beagle' },
+    { breed: 'Other', value: 'Other' },
+]);
 
-const filters = ref({
-    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-    species: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-    breed: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-    status: { value: null, matchMode: FilterMatchMode.EQUALS },
-});
+const catBreeds = reactive([
+    { breed: 'Siamese', value: 'Siamese' },
+    { breed: 'Persian', value: 'Persian' },
+    { breed: 'Maine Coon', value: 'Maine Coon' },
+    { breed: 'Other', value: 'Other' },
+]);
 
-const getSeverity = (status) => {
+const initFilters = () => {
+    filters.value = {
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+        type: { value: null, matchMode: FilterMatchMode.IN },
+        health_status: { value: null, matchMode: FilterMatchMode.IN },
+        breed: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+        status: { value: null, matchMode: FilterMatchMode.EQUALS },
+    };
+};
+
+initFilters();
+
+const clearFilter = () => {
+    initFilters();
+};
+
+const getStatusSeverity = (status) => {
     switch (status) {
-        case 'under-review':
-            return 'warn';
-
-        case 'available':
-            return 'success';
-
-        case 'adopted':
+        case 'Available':
             return 'info';
 
-        case 'pending-visit':
-            return 'danger';
+        case 'Unavailable':
+            return 'warn';
+
+        case 'Adopted':
+            return 'success';
+
+        default:
+            return null;
+    }
+}
+
+const getHealthStatusSeverity = (status) => {
+    switch (status) {
+        case 'Good':
+            return 'success';
+
+        case 'Recovery':
+            return 'warn';
 
         default:
             return null;
@@ -106,13 +138,25 @@ onMounted(async () => {
 
             <Card>
                 <template #title>
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between mb-3">
                         <h3 class="font-semibold">Your Pet Listings</h3>
 
                         <Button label="Add new pet" @click="showPetFormDialog" />
                     </div>
 
-                    <DataTable :value="pets" dataKey="id" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]" :loading="isLoading">
+                    <DataTable v-model:filters="filters" filterDisplay="menu" :value="pets" dataKey="id" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]" :loading="isLoading">
+                        <template #header>
+                            <div class="flex justify-between">
+                                <Button type="button" icon="pi pi-filter-slash" label="Clear Filters" outlined @click="clearFilter()" />
+                                <IconField>
+                                    <InputIcon>
+                                        <i class="pi pi-search" />
+                                    </InputIcon>
+                                    <InputText v-model="filters['global'].value" placeholder="Search" />
+                                </IconField>
+                            </div>
+                        </template>
+                        
                         <template #empty>
                             <p class="text-center">No pets found.</p>
                         </template>
@@ -125,51 +169,49 @@ onMounted(async () => {
                             </template>
                         </Column>
 
-                        <Column field="name" header="Name" :pt="{ columnTitle: { class: 'text-sm' } }">
-                            <template #body="{ data }">
-                                {{ data.name }}
-                            </template>
+                        <Column field="name" sortable header="Name" :pt="{ columnTitle: { class: 'text-sm' } }" style="min-width: 12rem" />
 
-                            <!-- <template #filter="{ filterModel, filterCallback }">
-                                <InputText fluid v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by name" />
-                            </template> -->
-                        </Column>
-
-                        <Column field="species" header="Type">
+                        <Column field="type" header="Type" sortable sortField="type" filterField="type" :showFilterMatchModes="false">
                             <template #body="{ data }">
                                 {{ data.type }}
                             </template>
 
-                            <!-- <template #filter="{ filterModel, filterCallback }">
-                                <InputText fluid v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by type" />
-                            </template> -->
+                            <template #filter="{ filterModel }">
+                                <Select fluid v-model="filterModel.value" :options="['Dog', 'Cat']" placeholder="Select One" style="min-width: 12rem" :showClear="true" />
+                            </template>
                         </Column>
 
-                        <Column field="breed" header="Breed">
+                        <Column field="breed" sortable header="Breed" />
+
+                        <Column field="health_status" sortable header="Health Status" :showFilterMatchModes="false">
                             <template #body="{ data }">
-                                {{ data.breed }}
+                                <Tag :value="data.health_status" :severity="getHealthStatusSeverity(data.health_status)" />
                             </template>
 
-                            <!-- <template #filter="{ filterModel, filterCallback }">
-                                <InputText fluid v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by breed" />
-                            </template> -->
-                        </Column>
-
-                        <Column field="status" header="Status" style="min-width: 12rem">
-                            <template #body="{ data }">
-                                <Tag :value="data.status" :severity="getSeverity(data.status)" />
-                            </template>
-
-                            <!-- <template #filter="{ filterModel, filterCallback }">
-                                <Select fluid v-model="filterModel.value" @change="filterCallback()" :options="statuses" placeholder="Select One" style="min-width: 12rem" :showClear="true">
+                            <template #filter="{ filterModel }">
+                                <Select v-model="filterModel.value" :options="['Good', 'Recovery']" placeholder="Select One" :showClear="true">
                                     <template #option="slotProps">
-                                        <Tag :value="slotProps.option" :severity="getSeverity(slotProps.option)" />
+                                        <Tag :value="slotProps.option" :severity="getHealthStatusSeverity(slotProps.option)" />
                                     </template>
                                 </Select>
-                            </template> -->
+                            </template>
                         </Column>
 
-                        <Column class="w-24 !text-end">
+                        <Column field="status" sortable header="Status" :showFilterMatchModes="false">
+                            <template #body="{ data }">
+                                <Tag :value="data.status" :severity="getStatusSeverity(data.status)" />
+                            </template>
+
+                            <template #filter="{ filterModel }">
+                                <Select v-model="filterModel.value" :options="['Available', 'Unavailable', 'Adopted']" placeholder="Select One" :showClear="true">
+                                    <template #option="slotProps">
+                                        <Tag :value="slotProps.option" :severity="getStatusSeverity(slotProps.option)" />
+                                    </template>
+                                </Select>
+                            </template>
+                        </Column>
+
+                        <Column class="w-24 !text-end" header="Actions">
                             <template #body="{ data }">
                                 <div class="flex items-center justify-center gap-3">
                                     <Button label="Edit" @click="updateRow(data)" severity="secondary"></Button>
