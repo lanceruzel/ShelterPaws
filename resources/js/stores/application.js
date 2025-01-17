@@ -27,6 +27,19 @@ export const useApplicationStore = defineStore('petApplication', {
                     if(response.status === 200){
                         //Get applications
                         this.applications = Object.values(response.data);
+
+                        if(this.applications){
+                            //Check images format and convert if it is in string format
+                            this.applications.forEach((item) => {
+
+                                //Check if images is in string format
+                                if(typeof item.pet.images === 'string'){
+                                    
+                                    //Convert string array into array
+                                    item.pet.images = JSON.parse(item.pet.images);
+                                }
+                            });
+                        }
                     }
                 }
             }catch (error){

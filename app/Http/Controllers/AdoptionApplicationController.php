@@ -10,9 +10,9 @@ class AdoptionApplicationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return AdoptionApplication::all();
+        return $request->user()->userProfile->adoptionApplications()->with('pet.shelterProfile')->get();
     }
 
     /**
