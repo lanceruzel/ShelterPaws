@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pet;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
@@ -38,11 +39,19 @@ class PetController extends Controller
             'type' => 'required|in:' . self::TYPE_DOG . ',' . self::TYPE_CAT,
             'breed' => 'required',
             'age' => 'required|numeric',
-            'health_status' => 'required',
+            'gender' => 'required',
             'description' => 'required',
+            'adopted_at' => 'required',
+            'fixed' => 'required',
+            'vaccines' => 'required',
             'images' => 'required|array', // Ensure images is an array
             'images.*' => 'required|image|max:3072|mimes:png,jpg,jpeg,webp',
         ]);
+
+        //Convert date format
+        $validated['adopted_at'] = (new DateTime($validated['adopted_at']))->format('Y-m-d');
+
+        $validated['vaccines'] = json_encode($validated['vaccines']);
 
         $imagePaths = [];
 
@@ -86,9 +95,12 @@ class PetController extends Controller
             'type' => 'required|in:' . self::TYPE_DOG . ',' . self::TYPE_CAT,
             'breed' => 'required',
             'age' => 'required|numeric',
-            'health_status' => 'required',
+            'gender' => 'required',
             'status' => 'required',
             'description' => 'required',
+            'adopted_at' => 'required',
+            'fixed' => 'required',
+            'vaccines' => 'required|array',
             'newImages' => 'nullable|array',
             'newImages.*' => 'nullable|image|max:3072|mimes:png,jpg,jpeg,webp'
         ];
@@ -101,6 +113,12 @@ class PetController extends Controller
         }
 
         $validated = $request->validate($rules);
+
+        //Convert date format
+        $validated['adopted_at'] = (new DateTime($validated['adopted_at']))->format('Y-m-d');
+
+        //Convert into json formmated string
+        $validated['vaccines'] = json_encode($validated['vaccines']);
 
         $imagePaths = $validated['images'] ?? [];
 
@@ -124,15 +142,21 @@ class PetController extends Controller
             }
         }
 
+        //Convert into json formmated string
         $validated['images'] = json_encode($imagePaths);
+
+        //Remove /
         $validated['images'] = stripslashes($validated['images']);
 
         $pet->name = $validated['name'];
         $pet->type = $validated['type'];
         $pet->breed = $validated['breed'];
         $pet->age = $validated['age'];
-        $pet->health_status = $validated['health_status'];
+        $pet->gender = $validated['gender'];
         $pet->description = $validated['description'];
+        $pet->adopted_at = $validated['adopted_at'];
+        $pet->fixed = $validated['fixed'];
+        $pet->vaccines = json_encode($validated['vaccines']);
         $pet->status = $validated['status'];
         $pet->images = $validated['images'];
         $pet->save();

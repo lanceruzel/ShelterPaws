@@ -18,13 +18,17 @@ class Pet extends Model
         'type',
         'breed',
         'age',
-        'health_status',
+        'gender',
         'description',
         'images',
+        'adopted_at',
+        'fixed',
+        'vaccines'
     ];
 
     protected $casts = [
         'images' => 'string',
+        'vaccines' => 'string',
     ];
 
     public function shelterProfile(){

@@ -35,7 +35,7 @@ const initFilters = () => {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
         name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
         type: { value: null, matchMode: FilterMatchMode.IN },
-        health_status: { value: null, matchMode: FilterMatchMode.IN },
+        gender: { value: null, matchMode: FilterMatchMode.IN },
         breed: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
         status: { value: null, matchMode: FilterMatchMode.EQUALS },
     };
@@ -57,19 +57,6 @@ const getStatusSeverity = (status) => {
 
         case 'Adopted':
             return 'success';
-
-        default:
-            return null;
-    }
-}
-
-const getHealthStatusSeverity = (status) => {
-    switch (status) {
-        case 'Good':
-            return 'success';
-
-        case 'Recovery':
-            return 'warn';
 
         default:
             return null;
@@ -183,17 +170,9 @@ onMounted(async () => {
 
                         <Column field="breed" sortable header="Breed" />
 
-                        <Column field="health_status" sortable header="Health Status" :showFilterMatchModes="false">
-                            <template #body="{ data }">
-                                <Tag :value="data.health_status" :severity="getHealthStatusSeverity(data.health_status)" />
-                            </template>
-
+                        <Column field="gender" sortable header="Gender" :showFilterMatchModes="false">
                             <template #filter="{ filterModel }">
-                                <Select v-model="filterModel.value" :options="['Good', 'Recovery']" placeholder="Select One" :showClear="true">
-                                    <template #option="slotProps">
-                                        <Tag :value="slotProps.option" :severity="getHealthStatusSeverity(slotProps.option)" />
-                                    </template>
-                                </Select>
+                                <Select v-model="filterModel.value" :options="['Male', 'Female']" placeholder="Select One" :showClear="true" />
                             </template>
                         </Column>
 

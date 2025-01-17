@@ -1,8 +1,9 @@
 <script setup>
-import { InputText, Button, Select, InputNumber, ProgressBar, Message, Badge } from 'primevue';
+import { InputText, Button, Select, InputNumber, Message, Badge, DatePicker, SelectButton } from 'primevue';
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { inject } from "vue";
 import Textarea from 'primevue/textarea';
+import MultiSelect from 'primevue/multiselect';
 import { useToast } from "primevue/usetoast";
 import FileUpload from 'primevue/fileupload';
 import { usePrimeVue } from 'primevue/config';
@@ -25,11 +26,14 @@ const formData = reactive({
     type: 'Dog',
     breed: null,
     age: 1,
-    health_status: 'Good',
+    gender: null,
     description: '',
     images: [],
     newImages: [],
-    status: null
+    status: null,
+    fixed: 0,
+    vaccines: null,
+    adopted_at: null
 });
 
 const closeDialog = () => {
@@ -89,11 +93,35 @@ function resetForm(){
     formData.type = 'Dog';
     formData.breed = null;
     formData.age = 1;
-    formData.health_status = 'Good';
+    formData.gender = null;
     formData.description = '';
     formData.images = [];
     formData.newImages = [];
+    formData.adopted_at = null;
+    formData.vaccines = null;
+    formData.fixed = 0;
 }
+
+const vaccinesList = [
+    'Adenovirus (Hepatitis)',
+    'Bordetella',
+    'Bordetella (Kennel Cough)',
+    'Calicivirus',
+    'Canine Influenza',
+    'Chlamydia',
+    'Coronavirus',
+    'Distemper',
+    'Feline Herpesvirus (FHV-1) - Rhinotracheitis',
+    'Feline Infectious Peritonitis (FIP)',
+    'Feline Leukemia Virus (FeLV)',
+    'Feline Panleukopenia (Feline Distemper)',
+    'Leptospirosis',
+    'Lyme Disease',
+    'Microsporum Canis (Ringworm)',
+    'Parainfluenza',
+    'Parvovirus',
+    'Rabies'
+];
 
 async function submit(){
     if(mode.value === 'update'){
@@ -129,6 +157,12 @@ onMounted(() => {
     //Identify form mode
     if(formData.id){
         mode.value = 'update';
+
+        //Format vaccinces field 
+        const formatted = formData.vaccines.split(',');
+        formData.vaccines = formatted.map(item => item.replace(/[\[\]\\"\\]/g, '').trim());
+
+        console.log(formData.vaccines);
     }else{
         mode.value = 'store';
     }
@@ -206,16 +240,35 @@ onMounted(() => {
             </div>
 
             <div class="flex flex-col gap-1 mb-3">
-                <label class="font-semibold">Health Status</label>
+                <label class="font-semibold">Gender</label>
                 <Select 
-                    v-model="formData.health_status" 
-                    optionLabel="status" 
-                    optionValue="value"
-                    :options="[{ status: 'Good', value: 'Good' }, { status: 'Recovery', value: 'Recovery' }]" 
+                    v-model="formData.gender" 
+                    :options="['Male', 'Female']" 
                     checkmark :highlightOnSelect="false" 
+                    placeholder="Select gender"
                 />
-                <small class="form-error-message"></small>
+                <small class="form-error-message" v-if="errors.gender">{{ errors.gender[0] }}</small>
             </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-3">
+            <div class="flex flex-col gap-1 mb-3">
+                <label class="font-semibold">Date Rescued</label>
+                <DatePicker v-model="formData.adopted_at" dateFormat="dd/mm/yy" placeholder="1/1/2025" showButtonBar />
+                <small class="form-error-message" v-if="errors.adopted_at">{{ errors.adopted_at[0] }}</small>
+            </div>
+
+            <div class="flex flex-col gap-1 mb-3">
+                <label class="font-semibold">Spayed/Neutered</label> 
+                <SelectButton v-model="formData.fixed" optionLabel="text" optionValue="value" :options="[{ text: 'Yes', value: 1}, { text: 'No', value: 0}]" />
+                <small class="form-error-message" v-if="errors.fixed">{{ errors.fixed[0] }}</small>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-1 mb-3">
+            <label class="font-semibold">Vaccinations</label> 
+            <MultiSelect v-model="formData.vaccines" display="chip" filter :options="vaccinesList" checkmark :highlightOnSelect="false" showClear :maxSelectedLabels="3" />
+            <small class="form-error-message" v-if="errors.vaccines">{{ errors.vaccines[0] }}</small>
         </div>
 
         <div class="flex flex-col gap-1 mb-3">
