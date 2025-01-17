@@ -6,6 +6,7 @@ import { usePetStore } from '../stores/pet';
 import { useRoute } from 'vue-router';
 import Carousel from 'primevue/carousel';
 import Skeleton from 'primevue/skeleton';
+import AdoptFormDialog from '../components/Dialogs/AdoptFormDialog.vue';
 
 const route = useRoute();
 
@@ -147,10 +148,7 @@ onMounted(() => {
                         <div class="bottom-0">
                             <Button class="mb-4" fluid severity="secondary" label="View Shelter"></Button>
 
-                            <Button fluid>
-                                <i class="pi pi-heart"></i>
-                                <span>Adopt {{ pet.name }}</span>
-                            </Button>
+                            <AdoptFormDialog :id="pet.id" :name="pet.name"/>
                         </div>
                     </div>
                 </div>

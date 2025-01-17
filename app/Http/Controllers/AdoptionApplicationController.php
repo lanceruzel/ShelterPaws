@@ -23,20 +23,23 @@ class AdoptionApplicationController extends Controller
         $validated = $request->validate([
             'pet_id' => 'required|exists:pets,id',
             'contact' => 'required',
-            'province' => 'required',
-            'city' => 'required',
-            'barangay' => 'required',
             'adopter_description' => 'required',
         ]);
 
-        $validated['user_profile_id'] = $request->user()->userProfile->id;
-
-        AdoptionApplication::create($validated);
+        AdoptionApplication::create([
+            'pet_id' => $validated['pet_id'],
+            'user_profile_id' => $request->user()->userProfile->id,
+            'contact' => $validated['contact'],
+            'adopter_description' => $validated['adopter_description'],
+            'province' => $request->user()->userProfile->province,
+            'city' => $request->user()->userProfile->city,
+            'barangay' => $request->user()->userProfile->barangay,
+        ]);
 
         return [
             'message' => [
                     'status' => 'success',
-                    'detail' => 'Your request has been submitted.',
+                    'detail' => 'Your application has been submitted.',
                 ],
         ];
     }
