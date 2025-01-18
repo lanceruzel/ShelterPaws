@@ -32,6 +32,7 @@ class AuthController extends Controller
         if($request->role === self::ROLE_SHELTER){
             $fields['name'] = 'required';
             $fields['cover_photo'] = 'required|image|mimes:png,jpg,jpeg,webp';
+            $fields['description'] = 'required|min:150';
         }else{
             $fields['first_name'] = 'required';
             $fields['last_name'] = 'required';

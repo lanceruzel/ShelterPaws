@@ -9,6 +9,7 @@ import FileUpload from 'primevue/fileupload';
 import Divider from 'primevue/divider';
 import { useAuthStore } from '../stores/auth';
 import { storeToRefs } from 'pinia';
+import Textarea from 'primevue/textarea';
 
 const authStore = useAuthStore();
 const { authenticate } = authStore;
@@ -31,7 +32,8 @@ const formData = reactive({
     password: '',
     password_confirmation: '',
     role: 'shelter',
-    cover_photo: null
+    cover_photo: null,
+    description: ''
 });
 
 function onFileSelect(event) {
@@ -130,6 +132,12 @@ onMounted(() => {
                             <label>Shelter Name</label>
                             <InputText v-model="formData.name" :invalid="errors.name" type="text"/>
                             <small class="form-error-message" v-if="errors.name">{{ errors.name[0] }}</small>
+                        </div>
+
+                        <div class="flex flex-col gap-1 mt-3">
+                            <label class="font-semibold">Description</label>
+                            <Textarea v-model="formData.description" :invalid="errors.description" rows="5" cols="30" />
+                            <small class="form-error-message" v-if="errors.description">{{ errors.description[0] }}</small>
                         </div>
                         
                         <div class="grid md:grid-cols-2 gap-3">

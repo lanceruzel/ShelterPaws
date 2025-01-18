@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdoptionApplicationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PetController;
+use App\Http\Controllers\ShelterController;
 use App\Http\Controllers\UserProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,3 +34,6 @@ Route::get('pet/{pet}', [PetController::class, 'show']);
 Route::apiResource('application', AdoptionApplicationController::class)->middleware('auth:sanctum');
 
 Route::put('/user/profile', [UserProfileController::class, 'update'])->middleware('auth:sanctum');
+
+//Shelter
+Route::get('shelter', [ShelterController::class, 'index']);
