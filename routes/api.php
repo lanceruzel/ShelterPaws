@@ -17,8 +17,6 @@ Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-
-
 // Route::apiResource('pet', PetController::class)->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -37,3 +35,4 @@ Route::put('/user/profile', [UserProfileController::class, 'update'])->middlewar
 
 //Shelter
 Route::get('shelter', [ShelterController::class, 'index']);
+Route::get('shelter/{user}', [ShelterController::class, 'show']);

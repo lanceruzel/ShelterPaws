@@ -3,12 +3,6 @@ import { Card } from 'primevue';
 import Skeleton from 'primevue/skeleton';
 </script>
 
-<!-- <Skeleton class="!h-8 !w-3/4 md:!w-2/4 mb-3"></Skeleton>
-<Skeleton class="!h-5 !w-2/4 md:!w-1/4 mb-3"></Skeleton>
-
-<Skeleton class="!h-5 !w-2/4 md:!w-1/4 mb-4"></Skeleton>
-
-<Skeleton class="!h-5 !w-20 mb-3"></Skeleton> -->
 <template>
 <Card class="overflow-hidden" v-for="i in 2" :key="i">
     <template #header>

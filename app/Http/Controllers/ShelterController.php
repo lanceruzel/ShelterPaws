@@ -12,4 +12,8 @@ class ShelterController extends Controller
     function index(Request $request){
         return User::where('role', 'shelter')->with('userProfile.pets')->get();
     }
+
+    function show(User $user){
+        return $user->load('userProfile.pets');
+    }
 }

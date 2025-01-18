@@ -29,8 +29,36 @@ export const useShelterStore = defineStore('authShelter', {
                 console.error(error);
             }
         },
-        async getShelter(){
+        async getShelter(id){
+            if(localStorage.getItem('token')){
+                try{
+                    const response = await axios.get(`/api/shelter/${id}`);
 
+                    if(response.status === 200){
+                        this.errors = {};
+
+                        const user = response.data;
+
+                        if(user.user_profile.pets){
+                            //Check images format and convert if it is in string format
+                            user.user_profile.pets.forEach((item) => {
+                                //Check if images is in string format
+                                if(typeof item.images === 'string'){
+    
+                                    //Convert string array into array
+                                    item.images = JSON.parse(item.images);
+                                }
+                            });
+                        }
+
+                        //Pass data
+                        return user;
+                    }
+                }catch(error){
+                    console.log('Inside Axios getPet:');
+                    console.error(error);  
+                }
+            }
         },
         async saveShelter(){
 
