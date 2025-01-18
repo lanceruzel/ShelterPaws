@@ -38,6 +38,10 @@ export const useApplicationStore = defineStore('petApplication', {
                                     //Convert string array into array
                                     item.pet.images = JSON.parse(item.pet.images);
                                 }
+
+                                if(item.user_profile){
+                                    item.user_profile.name = item.user_profile.first_name + ' ' + item.user_profile.last_name;
+                                }
                             });
                         }
                     }

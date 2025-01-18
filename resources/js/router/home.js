@@ -10,6 +10,7 @@ import ShelterView from '../views/ShelterView.vue';
 import SheltersView from '../views/SheltersView.vue';
 import AdoptionStatusView from '../views/AdoptionStatusView.vue';
 import PetManagementView from '../views/PetManagementView.vue';
+import AdoptionApplicationsView from '../views/AdoptionApplicationsView.vue';
 
 export default [
     {
@@ -98,6 +99,15 @@ export default [
         path: '/shelters/pet/manage',
         name: 'pet-management',
         component: PetManagementView,
+        meta: { 
+            layout: DefaultLayout,
+            auth: true
+        },
+    },
+    {
+        path: '/shelters/applications',
+        name: 'shelter-application',
+        component: AdoptionApplicationsView,
         meta: { 
             layout: DefaultLayout,
             auth: true

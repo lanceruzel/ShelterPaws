@@ -12,6 +12,10 @@ class AdoptionApplicationController extends Controller
      */
     public function index(Request $request)
     {
+        if($request->user()->role === 'admin'){
+            return AdoptionApplication::with(['pet.shelterProfile', 'userProfile'])->get();
+        }
+
         return $request->user()->userProfile->adoptionApplications()->with('pet.shelterProfile')->get();
     }
 
@@ -58,15 +62,11 @@ class AdoptionApplicationController extends Controller
     public function update(Request $request, AdoptionApplication $application)
     {
         $validated = $request->validate([
-            'contact' => 'required',
-            'province' => 'required',
-            'city' => 'required',
-            'barangay' => 'required',
-            'adopter_description' => 'required',
             'status' => 'required',
         ]);
 
-        $application->update($validated);
+        $application->status = $validated['status'];
+        $application->save();
 
         return [
             'message' => [

@@ -24,8 +24,9 @@ const { logout } = authStore;
                     <RouterLink :to="{ name: 'adoption-status' }" class="hover:text-teal-500 hover:font-semibold text-gray-600 h-full px-2 flex items-center">Adoption Application Status</RouterLink>
                 </div>
 
-                <div v-if="authStore.user && authStore.user.role === 'shelter'">
+                <div v-if="authStore.user && authStore.user.role === 'shelter'" class="md:flex items-center justify-center">
                     <RouterLink :to="{ name: 'pet-management' }" class="hover:text-teal-500 hover:font-semibold text-gray-600 h-full px-2 flex items-center">Listing Management</RouterLink>
+                    <RouterLink :to="{ name: 'shelter-application' }" class="hover:text-teal-500 hover:font-semibold text-gray-600 h-full px-2 flex items-center">Adoption Applications</RouterLink>
                 </div>
             </nav>
 
