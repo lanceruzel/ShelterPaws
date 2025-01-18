@@ -147,8 +147,7 @@ onMounted(() => {
                         </div>
                         
                         <div class="bottom-0">
-                            <Button class="mb-4" fluid severity="secondary" label="View Shelter"></Button>
-
+                            <Button v-if="pet.shelter_profile" fluid class="mb-4" severity="secondary" as="router-link" label="View Shelter" :to="{ name: 'shelter-view', params: { id: pet.shelter_profile.id } }" />
                             <AdoptFormDialog :id="pet.id" :name="pet.name"/>
                         </div>
                     </div>
