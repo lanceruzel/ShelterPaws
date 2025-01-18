@@ -48,8 +48,6 @@ const loadApplications = async () =>{
 
         //Assign applications
         applications = applicationStore.applications;
-
-        console.log(applicationStore.applications);
     }catch(error){
         console.error('Error in load applications:', error);
     }finally{
@@ -76,6 +74,7 @@ const getStatusSeverity = (status) => {
 const adoptionApplicationsViewDialog = defineAsyncComponent(() => import('../components/Dialogs/ApplicationInfoDialog.vue'));
 
 const showAdoptionApplicationsViewDialog = (data = null) => {
+    console.log(data)
     dialog.open(adoptionApplicationsViewDialog, {
         props: {
             header: 'Adoption Application Information',

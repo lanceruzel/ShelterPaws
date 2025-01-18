@@ -14,6 +14,14 @@ class AdoptionApplicationController extends Controller
     {
         if($request->user()->role === 'admin'){
             return AdoptionApplication::with(['pet.shelterProfile', 'userProfile'])->get();
+        }else if($request->user()->role === 'shelter'){
+            $userProfileId = $request->user()->userProfile->id;
+
+            return AdoptionApplication::with(['pet.shelterProfile', 'userProfile'])
+            ->whereHas('pet', function ($query) use ($userProfileId) {
+                $query->where('user_profile_id', $userProfileId);
+            })
+            ->get();
         }
 
         return $request->user()->userProfile->adoptionApplications()->with('pet.shelterProfile')->get();

@@ -6,7 +6,7 @@ const { saveApplication } = applicationStore;
 import { inject, onMounted, reactive, ref } from "vue";
 import ApplicationInfoSkeleton from '../Skeletons/ApplicationInfoSkeleton.vue';
 
-let formData = reactive([]);
+let formData = reactive({});
 const reloadData = ref(false);
 const currentStatus = ref('');
 
@@ -46,6 +46,7 @@ onMounted(() => {
     //Retrieved passed data and store it on formData
     Object.assign(formData, dialogRef.value.data.applicationData);
     currentStatus.value = formData.status;
+    console.log(formData);
 });
 </script>
 
@@ -60,7 +61,7 @@ tbody > tr > td{
 </style>
 
 <template>
-    <form v-if="formData.pet" @submit.prevent="submit">
+    <form v-if="formData.pet && formData.user_profile" @submit.prevent="submit">
         <div class="flex items-center gap-2 mb-4">
             <p>Current Status: </p>
             <Tag :value="currentStatus" :severity="getStatusSeverity(currentStatus)" />
