@@ -97,7 +97,7 @@ onMounted(async () => {
         <div class="container mx-auto px-4">
             <h1 class="text-3xl font-bold mb-8 text-center text-gray-900">Find Your Perfect Companion</h1>
 
-            <div v-if="!isLoading && pets.length > 0">
+            <div v-if="!isLoading">
                 <DataView :value="filteredPets" paginator :rows="5"
                     :pt="{ 
                         header: {
@@ -138,13 +138,16 @@ onMounted(async () => {
                     </template>
 
                     <template #list="slotProps">
-                        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div v-if="pets.length > 0" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                             <PetCard :pets="slotProps.items" />
                         </div>
                     </template>
 
                     <template #empty>
-                        No data found.
+                        <div class="flex flex-col items-center justify-center">
+                            <img class="h-[400px]" src="/public/assets/imgs/no_found.svg" alt="">
+                            <h2 class="text-3xl font-bold">No data found.</h2>
+                        </div>
                     </template>
                 </DataView>
             </div>

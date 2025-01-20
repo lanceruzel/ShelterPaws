@@ -22,7 +22,7 @@ defineProps({
     <template #subtitle>
         <span v-text="pet.breed"></span>
     </template>
-
+    
     <template #footer>
         <Button as="router-link" icon="pi pi-heart" label="Adopt Me" :to="{ name: 'pet-view', params: { id: pet.id } }" fluid />
     </template>

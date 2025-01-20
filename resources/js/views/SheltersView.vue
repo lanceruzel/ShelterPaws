@@ -132,7 +132,10 @@ onMounted(() => {
                     </template>
 
                     <template #empty>
-                        No data found.
+                        <div class="flex flex-col items-center justify-center">
+                            <img class="h-[400px]" src="/public/assets/imgs/no_found.svg" alt="">
+                            <h2 class="text-3xl font-bold">No data found.</h2>
+                        </div>
                     </template>
                 </DataView>
             </div>

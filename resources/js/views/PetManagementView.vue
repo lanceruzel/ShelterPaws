@@ -170,7 +170,10 @@ onMounted(async () => {
                         </template>
                         
                         <template #empty>
-                            <p class="text-center">No pets found.</p>
+                            <div class="flex flex-col items-center justify-center">
+                                <img class="h-[400px]" src="/public/assets/imgs/no_found.svg" alt="">
+                                <h2 class="text-3xl font-bold">No data found.</h2>
+                            </div>
                         </template>
                         
                         <template #loading>Loading pets data. Please wait.</template>
