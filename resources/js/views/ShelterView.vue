@@ -5,6 +5,7 @@ import { onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useShelterStore } from '../stores/shelter';
 import ShelterViewSkeleton from '../components/Skeletons/ShelterViewSkeleton.vue';
+import DataView from 'primevue/dataview';
 
 const shelterStore = useShelterStore();
 const { getShelter } = shelterStore;
@@ -44,6 +45,20 @@ onMounted(() => {
     loadShelterData();
 });
 </script>
+
+<style scoped>
+::v-deep(.p-dataview-paginator-bottom) {
+    @apply border-none
+}
+
+::v-deep(.p-paginator){
+    @apply bg-transparent
+}
+
+::v-deep(.p-paginator-content){
+    @apply bg-white py-1 px-5 rounded shadow
+}
+</style>
 
 <template>
     <div class="bg-gray-50 py-20">
@@ -93,9 +108,21 @@ onMounted(() => {
 
             <h2 class="text-2xl font-bold mb-4">Pets available for Adoption</h2>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <PetCard :pets="shelter.user_profile.pets" />
-            </div>
+            <DataView :value="shelter.user_profile.pets" paginator :rows="5"
+                :pt="{ 
+                    header: {
+                        class: '!rounded-lg !p-5'
+                    },
+                    content: { 
+                        class: '!bg-transparent my-10' 
+                    },
+                }">
+                <template #list="slotProps">
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <PetCard :pets="slotProps.items" />
+                    </div>
+                </template>
+            </DataView>
         </div>
 
         <div v-else class="container mx-auto px-4 py-8">
