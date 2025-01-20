@@ -38,6 +38,17 @@ class AdoptionApplicationController extends Controller
             'adopter_description' => 'required',
         ]);
 
+
+        //Check if user already have an exisitng application with the selected pet
+        if(AdoptionApplication::where('pet_id', $validated['pet_id'])->where('user_profile_id', $request->user()->userProfile->id)->exists()){
+            return response()->json([
+                'message' => [
+                    'status' => 'error',
+                    'detail' => 'You have already submitted an application for this pet.',
+                ],
+            ], 400);
+        }
+
         AdoptionApplication::create([
             'pet_id' => $validated['pet_id'],
             'user_profile_id' => $request->user()->userProfile->id,

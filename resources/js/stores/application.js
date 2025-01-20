@@ -39,6 +39,7 @@ export const useApplicationStore = defineStore('petApplication', {
                                     item.pet.images = JSON.parse(item.pet.images);
                                 }
 
+                                //Assign name into full name
                                 if(item.user_profile){
                                     item.user_profile.name = item.user_profile.first_name + ' ' + item.user_profile.last_name;
                                 }
@@ -64,30 +65,39 @@ export const useApplicationStore = defineStore('petApplication', {
                 });
         
                 if(response.status === 200){
-                    const data = response.data;
-        
-                    if(data){
-                        // Get message
-                        const message = data.message;
-        
-                        this.toast.add({
-                            severity: 'success',
-                            summary: 'Adoption Application',
-                            detail: message.detail,
-                            life: 3000,
-                        });
-        
-                        return true;
-                    }
+                    const message = response.data.message.detail;
+
+                    this.toast.add({
+                        severity: 'success',
+                        summary: 'Adoption Application',
+                        detail: message,
+                        life: 3000,
+                    });
+
+                    return true;
                 }
-            }catch (error){
-                // Get form input errors
+            }catch(error){
+                //Get API error
+                if (error.response && error.response.data.message) {
+                    const message = error.response.data.message.detail;
+
+                    this.toast.add({
+                        severity: 'error',
+                        summary: 'Adoption Application',
+                        detail: message,
+                        life: 3000,
+                    });
+
+                    return false;
+                }
+
+                //Get form input errors
                 if(error.response && error.response.data.errors){
                     this.errors = error.response.data.errors;
                 }
-        
-                console.log('Inside Axios save application:');
-                console.error(error);
+
+                // console.log('Inside Axios save application:');
+                // console.error(error);
             }finally{
                 this.isFormLoading = false;
             }
