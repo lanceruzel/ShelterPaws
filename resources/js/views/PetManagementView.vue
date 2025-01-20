@@ -6,11 +6,13 @@ import { defineAsyncComponent, onMounted, reactive, ref, watch } from 'vue';
 import { FilterMatchMode } from '@primevue/core/api';
 import { useDialog } from 'primevue';
 import { usePetStore } from '../stores/pet';
+import { useConfirm } from "primevue/useconfirm";
 
 const petStore = usePetStore();
-const { getUserListing } = petStore;
+const { getUserListing, deletePet } = petStore;
 
 const dialog = useDialog();
+const confirm = useConfirm();
 
 let pets = reactive([]);
 const isLoading = ref(false);
@@ -86,6 +88,29 @@ const showPetFormDialog = (data = null) => {
         onClose: (opt) =>{
             //Reload data table if user store or update a row
             if(opt.data && opt.data.reloadData){
+                loadPets();
+            }
+        }
+    });
+}
+
+const deletePetConfirmation = (id) =>{
+    confirm.require({
+        message: 'Do you want to delete this record?',
+        header: 'Confirmation',
+        icon: 'pi pi-info-circle',
+        rejectLabel: 'Cancel',
+        rejectProps: {
+            label: 'Cancel',
+            severity: 'secondary',
+            outlined: true
+        },
+        acceptProps: {
+            label: 'Delete',
+            severity: 'danger'
+        },
+        accept: () => {
+            if(deletePet(id)){
                 loadPets();
             }
         }
@@ -194,7 +219,7 @@ onMounted(async () => {
                             <template #body="{ data }">
                                 <div class="flex items-center justify-center gap-3">
                                     <Button label="Edit" @click="updateRow(data)" severity="secondary"></Button>
-                                    <Button label="Delete" @click="updateRow(data)" severity="danger"></Button>
+                                    <Button label="Delete" @click="deletePetConfirmation(data.id)" severity="danger"></Button>
                                 </div>
                             </template>
                         </Column>

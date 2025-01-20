@@ -135,6 +135,39 @@ export const usePetStore = defineStore('petStore', {
             }finally{
                 this.isFormLoading = false;
             }
+        },
+        async deletePet(id){
+            this.isDeleteLoading = true; 
+
+            try{
+                if(localStorage.getItem('token')){
+                    const response = await axios.delete(`/api/pet/${id}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem('token')}`
+                        }
+                    });
+
+                    if(response.status === 200){
+                        const data = response.data;
+        
+                        if(data){
+                            // Get message
+                            const message = data.message;
+            
+                            this.toast.add({
+                                severity: 'success',
+                                summary: 'Pet Listing',
+                                detail: message.detail,
+                                life: 3000,
+                            });
+            
+                            return true;
+                        }
+                    }
+                }
+            }catch(error){
+                
+            }
         }
     }
 });

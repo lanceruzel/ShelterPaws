@@ -10,6 +10,7 @@ import router from './router';
 import { useToast } from 'primevue/usetoast';
 import DialogService from 'primevue/dialogservice';
 import { definePreset } from '@primevue/themes';
+import ConfirmationService from 'primevue/confirmationservice';
 
 const pinia = createPinia();
 const app = createApp(App);
@@ -25,6 +26,7 @@ app.use(pinia);
 app.use(router);
 app.use(ToastService);
 app.use(DialogService);
+app.use(ConfirmationService);
 
 const MyPreset = definePreset(Aura, {
     semantic: {
