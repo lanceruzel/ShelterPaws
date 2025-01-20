@@ -3,6 +3,9 @@ import Card from 'primevue/card';
 import InputText from 'primevue/inputtext';
 import Password from 'primevue/password';
 import Button from 'primevue/button';
+import InputMask from 'primevue/inputmask';
+import InputGroup from 'primevue/inputgroup';
+import InputGroupAddon from 'primevue/inputgroupaddon';
 import { Select } from 'primevue';
 import { onMounted, reactive, ref, watch } from 'vue';
 import FileUpload from 'primevue/fileupload';
@@ -101,6 +104,7 @@ watch(() => formData.city, (selectedCity) => {
 
 onMounted(() => {
     loadData();
+    errors.value = {};
 });
 </script>
 
@@ -162,7 +166,10 @@ onMounted(() => {
 
                         <div class="flex flex-col gap-1 mt-3">
                             <label>Contact</label>
-                            <InputText v-model="formData.contact" :invalid="errors.contact" />
+                            <InputGroup>
+                                <InputGroupAddon>+63</InputGroupAddon>
+                                <InputMask mask="999-9999-999" placeholder="999-9999-999" v-model="formData.contact" :invalid="errors.contact" />
+                            </InputGroup>
                             <small class="form-error-message" v-if="errors.contact">{{ errors.contact[0] }}</small>
                         </div>
 

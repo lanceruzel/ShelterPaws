@@ -3,6 +3,9 @@ import { Button, InputText } from 'primevue';
 import Dialog from 'primevue/dialog';
 import { onMounted, reactive, ref } from "vue";
 import Textarea from 'primevue/textarea';
+import InputMask from 'primevue/inputmask';
+import InputGroup from 'primevue/inputgroup';
+import InputGroupAddon from 'primevue/inputgroupaddon';
 import { useApplicationStore } from '../../stores/application';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
@@ -55,7 +58,10 @@ async function submit(){
 
         <div class="flex flex-col gap-1 mb-3">
             <label class="font-semibold">Contact</label> 
-            <InputText v-model="formData.contact" :invalid="errors.contact"/>
+            <InputGroup>
+                <InputGroupAddon>+63</InputGroupAddon>
+                <InputMask mask="999-9999-999" placeholder="999-9999-999" v-model="formData.contact" :invalid="errors.contact" />
+            </InputGroup>
             <small class="form-error-message" v-if="errors.contact">{{ errors.contact[0] }}</small>
         </div>
 
