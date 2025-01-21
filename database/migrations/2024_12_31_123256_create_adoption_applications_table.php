@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('province');
             $table->string('city');
             $table->string('barangay');
-            $table->string('adopter_description');
+            $table->text('adopter_description');
             $table->enum('status', ['Pending Home Visit', 'Approved', 'Under Review'])->default('Under Review');
 
             $table->timestamps();

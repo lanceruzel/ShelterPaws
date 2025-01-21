@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('breed');
             $table->string('age');
             $table->enum('gender', ['Male', 'Female'])->default('Male');
-            $table->string('description');
+            $table->text('description');
             $table->boolean('fixed')->default(false); //Spayed/Neutered
             $table->enum('status', ['Available', 'Unavailable', 'Adopted'])->default('Available');
             $table->json('images');
