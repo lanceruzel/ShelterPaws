@@ -18,17 +18,21 @@ class Pet extends Model
         'type',
         'breed',
         'age',
-        'health_status',
+        'gender',
         'description',
         'images',
+        'adopted_at',
+        'fixed',
+        'vaccines'
     ];
 
     protected $casts = [
         'images' => 'string',
+        'vaccines' => 'string',
     ];
 
     public function shelterProfile(){
-        return $this->belongsTo(UserProfile::class);
+        return $this->belongsTo(UserProfile::class, 'user_profile_id');
     }
 
     public function adoptionApplications(){

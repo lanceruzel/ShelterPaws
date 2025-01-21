@@ -10,9 +10,21 @@ class AdoptionApplicationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return AdoptionApplication::all();
+        if($request->user()->role === 'admin'){
+            return AdoptionApplication::with(['pet.shelterProfile', 'userProfile'])->get();
+        }else if($request->user()->role === 'shelter'){
+            $userProfileId = $request->user()->userProfile->id;
+
+            return AdoptionApplication::with(['pet.shelterProfile', 'userProfile'])
+            ->whereHas('pet', function ($query) use ($userProfileId) {
+                $query->where('user_profile_id', $userProfileId);
+            })
+            ->get();
+        }
+
+        return $request->user()->userProfile->adoptionApplications()->with('pet.shelterProfile')->get();
     }
 
     /**
@@ -23,20 +35,34 @@ class AdoptionApplicationController extends Controller
         $validated = $request->validate([
             'pet_id' => 'required|exists:pets,id',
             'contact' => 'required',
-            'province' => 'required',
-            'city' => 'required',
-            'barangay' => 'required',
             'adopter_description' => 'required',
         ]);
 
-        $validated['user_profile_id'] = $request->user()->userProfile->id;
 
-        AdoptionApplication::create($validated);
+        //Check if user already have an exisitng application with the selected pet
+        if(AdoptionApplication::where('pet_id', $validated['pet_id'])->where('user_profile_id', $request->user()->userProfile->id)->exists()){
+            return response()->json([
+                'message' => [
+                    'status' => 'error',
+                    'detail' => 'You have already submitted an application for this pet.',
+                ],
+            ], 400);
+        }
+
+        AdoptionApplication::create([
+            'pet_id' => $validated['pet_id'],
+            'user_profile_id' => $request->user()->userProfile->id,
+            'contact' => $validated['contact'],
+            'adopter_description' => $validated['adopter_description'],
+            'province' => $request->user()->userProfile->province,
+            'city' => $request->user()->userProfile->city,
+            'barangay' => $request->user()->userProfile->barangay,
+        ]);
 
         return [
             'message' => [
                     'status' => 'success',
-                    'detail' => 'Your request has been submitted.',
+                    'detail' => 'Your application has been submitted.',
                 ],
         ];
     }
@@ -55,15 +81,11 @@ class AdoptionApplicationController extends Controller
     public function update(Request $request, AdoptionApplication $application)
     {
         $validated = $request->validate([
-            'contact' => 'required',
-            'province' => 'required',
-            'city' => 'required',
-            'barangay' => 'required',
-            'adopter_description' => 'required',
             'status' => 'required',
         ]);
 
-        $application->update($validated);
+        $application->status = $validated['status'];
+        $application->save();
 
         return [
             'message' => [

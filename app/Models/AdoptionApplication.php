@@ -11,8 +11,8 @@ class AdoptionApplication extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_profile_id',
         'pet_id',
+        'user_profile_id',
         'contact',
         'province',
         'city',

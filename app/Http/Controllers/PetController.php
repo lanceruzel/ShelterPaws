@@ -3,21 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pet;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class PetController extends Controller
 {
-    const TYPE_DOG = 'dog';
-    const TYPE_CAT = 'cat';
+    const TYPE_DOG = 'Dog';
+    const TYPE_CAT = 'Cat';
+
+    /**
+     * Display a all pet.
+     */
+    public function all()
+    {
+        return Pet::all();
+    }
 
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Pet::all();
+        return $request->user()->userProfile->pets;
     }
 
     /**
@@ -26,15 +35,23 @@ class PetController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'user_profile_id' => 'required',
             'name' => 'required',
             'type' => 'required|in:' . self::TYPE_DOG . ',' . self::TYPE_CAT,
             'breed' => 'required',
             'age' => 'required|numeric',
-            'health_status' => 'required',
+            'gender' => 'required',
             'description' => 'required',
+            'adopted_at' => 'required',
+            'fixed' => 'required',
+            'vaccines' => 'required',
+            'images' => 'required|array', // Ensure images is an array
             'images.*' => 'required|image|max:3072|mimes:png,jpg,jpeg,webp',
         ]);
+
+        //Convert date format
+        $validated['adopted_at'] = (new DateTime($validated['adopted_at']))->format('Y-m-d');
+
+        $validated['vaccines'] = json_encode($validated['vaccines']);
 
         $imagePaths = [];
 
@@ -65,7 +82,7 @@ class PetController extends Controller
      */
     public function show(Pet $pet)
     {
-        return $pet;
+        return $pet->load('shelterProfile');
     }
 
     /**
@@ -73,52 +90,82 @@ class PetController extends Controller
      */
     public function update(Request $request, Pet $pet)
     {
-        $validated = $request->validate([
+        $rules = [
             'name' => 'required',
             'type' => 'required|in:' . self::TYPE_DOG . ',' . self::TYPE_CAT,
             'breed' => 'required',
             'age' => 'required|numeric',
-            'health_status' => 'required',
+            'gender' => 'required',
+            'status' => 'required',
             'description' => 'required',
-            'images.*' => 'required|image|max:3072|mimes:png,jpg,jpeg,webp',
-        ]);
-    
-        $existingImages = json_decode($pet->images, true);
-        $newImages = $request->file('images');
-        $imagePaths = [];
-    
-        // Check for new images and save them
-        if($newImages){
-            foreach($newImages as $image){
+            'adopted_at' => 'required',
+            'fixed' => 'required',
+            'vaccines' => 'required|array',
+            'newImages' => 'nullable|array',
+            'newImages.*' => 'nullable|image|max:3072|mimes:png,jpg,jpeg,webp'
+        ];
+
+        //Required images when 'images' and 'newImages' are both empty
+        if(!$request->images && !$request->newImages){
+            $rules['images'] = 'required|array';
+        }else{
+            $rules['images'] = 'nullable|array';
+        }
+
+        $validated = $request->validate($rules);
+
+        //Convert date format
+        $validated['adopted_at'] = (new DateTime($validated['adopted_at']))->format('Y-m-d');
+
+        //Convert into json formmated string
+        $validated['vaccines'] = json_encode($validated['vaccines']);
+
+        $imagePaths = $validated['images'] ?? [];
+
+        //Save new images
+        if($request->hasFile('newImages')){
+            foreach($request->file('newImages') as $image){
                 $path = Storage::disk('public')->put('images/petProfile', $image);
+
+                //Push new images paths 
                 array_push($imagePaths, $path);
             }
         }
-    
-        // Merge existing images that are still in the request
-        foreach($existingImages as $existingImage){
-            if(!in_array($existingImage, $imagePaths)){
-                array_push($imagePaths, $existingImage);
-            }
-        }
-    
-        // Delete images that are no longer in the request
+
+        //Get saved images
+        $existingImages = json_decode($pet->images, true);
+
+        //Delete images that are no longer in the new images
         foreach($existingImages as $existingImage){
             if(!in_array($existingImage, $imagePaths)){
                 Storage::disk('public')->delete($existingImage);
             }
         }
-    
+
+        //Convert into json formmated string
         $validated['images'] = json_encode($imagePaths);
+
+        //Remove /
         $validated['images'] = stripslashes($validated['images']);
 
-        $pet->update($validated);
-    
+        $pet->name = $validated['name'];
+        $pet->type = $validated['type'];
+        $pet->breed = $validated['breed'];
+        $pet->age = $validated['age'];
+        $pet->gender = $validated['gender'];
+        $pet->description = $validated['description'];
+        $pet->adopted_at = $validated['adopted_at'];
+        $pet->fixed = $validated['fixed'];
+        $pet->vaccines = json_encode($validated['vaccines']);
+        $pet->status = $validated['status'];
+        $pet->images = $validated['images'];
+        $pet->save();
+
         return [
             'message' => [
-                'status' => 'success',
-                'detail' => 'Pet profile updated successfully.',
-            ],
+                    'status' => 'success',
+                    'detail' => 'Pet profile update successfully.',
+                ],
         ];
     }
 

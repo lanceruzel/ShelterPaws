@@ -18,27 +18,18 @@ class UserProfileController extends Controller
 
         if($request->user()->role == 'shelter'){
             $fields['name'] = 'required';
-            $fields['profile_dp'] = 'nullable|max:3072|image|mimes:png,jpg,jpeg,webp';
-            $fields['cover_dp'] = 'nullable|max:3072|image|mimes:png,jpg,jpeg,webp';
+            $fields['cover_photo'] = 'nullable|max:3072|image|mimes:png,jpg,jpeg,webp';
         }else{
             $fields['first_name'] = 'required';
             $fields['last_name'] = 'required';
         }
 
-        if($request->hasFile('profile_dp')){
+        if($request->hasFile('cover_photo')){
             if($request->user()->userProfile->profile_dp){
-                Storage::disk('public')->delete($request->user()->userProfile->profile_dp);
+                Storage::disk('public')->delete($request->user()->userProfile->cover_photo);
             }
 
-            $fields['profile_dp'] = Storage::disk('public')->put('images/shelterImgs', $request->profile_dp);
-        }
-
-        if($request->hasFile('cover_dp')){
-            if($request->user()->userProfile->profile_dp){
-                Storage::disk('public')->delete($request->user()->userProfile->cover_dp);
-            }
-
-            $fields['cover_dp'] = Storage::disk('public')->put('images/shelterImgs', $request->cover_dp);
+            $fields['cover_photo'] = Storage::disk('public')->put('images/shelterImgs', $request->cover_photo);
         }
 
         $validated = $request->validate($fields);
